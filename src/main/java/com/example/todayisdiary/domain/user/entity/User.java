@@ -1,0 +1,50 @@
+package com.example.todayisdiary.domain.user.entity;
+
+import com.example.todayisdiary.domain.user.enums.Sex;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+
+@NoArgsConstructor
+@Entity
+@Getter
+@Table(name = "account")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+
+    private String nickName;
+
+    @Email
+    @Length(min = 6, max = 30)
+    private String email;
+
+    @Length(max = 68)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Sex sex;
+
+    private String introduction;
+
+    @Builder
+    public User(String nickName, String email, String password, String introduction, Sex sex){
+        this.nickName = nickName;
+        this.email = email;
+        this.password = password;
+        this.introduction = introduction;
+        this.sex = sex;
+    }
+
+    public void setUser(String nickName, String introduction){
+        this.nickName = nickName;
+        this.introduction = introduction;
+    }
+}
