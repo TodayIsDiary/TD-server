@@ -1,5 +1,6 @@
 package com.example.todayisdiary.domain.user.entity;
 
+import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.enums.Sex;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,6 @@ import javax.validation.constraints.Email;
 @NoArgsConstructor
 @Entity
 @Getter
-@Table(name = "account")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +32,10 @@ public class User {
     @Column(nullable = false)
     private Sex sex;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     private String introduction;
 
     @Builder
@@ -41,6 +45,7 @@ public class User {
         this.password = password;
         this.introduction = introduction;
         this.sex = sex;
+        this.role = Role.USER;
     }
 
     public void setUser(String nickName, String introduction){
