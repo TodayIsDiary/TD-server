@@ -1,11 +1,11 @@
 package com.example.todayisdiary.domain.user.controller;
 
 import com.example.todayisdiary.domain.user.dto.LoginRequest;
+import com.example.todayisdiary.domain.user.dto.PasswordRequest;
 import com.example.todayisdiary.domain.user.dto.SignupRequest;
 import com.example.todayisdiary.domain.user.dto.UserResponse;
 import com.example.todayisdiary.domain.user.service.UserService;
 import com.example.todayisdiary.global.mail.dto.MailDto;
-import com.example.todayisdiary.global.mail.service.MailService;
 import com.example.todayisdiary.global.security.auth.AuthDetails;
 import com.example.todayisdiary.global.security.jwt.JwtProvider;
 import com.example.todayisdiary.global.security.jwt.dto.TokenResponse;
@@ -20,7 +20,6 @@ public class UserController {
 
     private final UserService userService;
     public final JwtProvider jwtProvider;
-    private final MailService mailService;
 
     @PostMapping("/signup")
     public UserResponse signUp(@RequestBody SignupRequest request){ return userService.signup(request);}
@@ -40,8 +39,12 @@ public class UserController {
     }
 
     @PostMapping("/lost/password")
-    public String mail(@RequestBody MailDto dto){
-        mailService.mailSend(dto);
-        return "메일이 정상적으로 보내줬습니다.";
+    public void mail(@RequestBody MailDto dto){
+        userService.lostPassword(dto);
+    }
+
+    @PatchMapping("/lost/password")
+    public void setPassword(@RequestBody PasswordRequest request){
+        userService.setPassword(request);
     }
 }
