@@ -44,6 +44,9 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.28'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    // SMTP
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
