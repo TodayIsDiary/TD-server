@@ -18,7 +18,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 아이디
+    private String accountId;
 
+    // 닉네임
+    @Length(min = 3, max = 12)
     private String nickName;
 
     @Email
@@ -39,7 +43,8 @@ public class User {
     private String introduction;
 
     @Builder
-    public User(String nickName, String email, String password, String introduction, Sex sex){
+    public User(String accountId, String nickName, String email, String password, String introduction, Sex sex){
+        this.accountId = accountId;
         this.nickName = nickName;
         this.email = email;
         this.password = password;
@@ -49,7 +54,11 @@ public class User {
     }
 
     public void setUser(String nickName, String introduction){
-        this.nickName = nickName;
-        this.introduction = introduction;
+        if (nickName != null) this.nickName = nickName;
+        if (introduction != null)this.introduction = introduction;
+    }
+
+    public void setPassword(String password){
+        this.password = password;
     }
 }
