@@ -51,9 +51,11 @@ public class UserService {
         User user = userRepository.findByAccountId(request.getAccountId())
                 .orElseThrow(() -> new IllegalArgumentException("아이디가 맞지 않습니다."));
 
-        if(passwordEncoder.matches(request.getPassword(), user.getPassword())){
-            return UserResponse.of(user);
-        }else throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+        }
+
+        return UserResponse.of(user);
     }
 
     // 이메일 코드 보낼때
@@ -75,11 +77,13 @@ public class UserService {
         User user = userRepository.findByAccountId(mail.getAccountId())
                 .orElseThrow(() -> new IllegalArgumentException("인증번호와 맞는 이메일이 없습니다..?"));
 
-        if(request.getNewPassword().equals(request.getNewPasswordValid())){
-            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-            userRepository.save(user);
-            mailRepository.delete(mail);
-        }else throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+        if(!request.getNewPassword().equals(request.getNewPasswordValid())){
+            throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        mailRepository.delete(mail);
     }
 
     // 토큰 비밀번호 변경
