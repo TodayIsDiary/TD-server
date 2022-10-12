@@ -10,6 +10,7 @@ import com.example.todayisdiary.global.security.auth.AuthDetails;
 import com.example.todayisdiary.global.security.jwt.JwtProvider;
 import com.example.todayisdiary.global.security.jwt.dto.TokenResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +23,11 @@ public class UserController {
     public final JwtProvider jwtProvider;
 
     @PostMapping("/signup")
+    @ResponseStatus(HttpStatus.CREATED)
     public UserResponse signUp(@RequestBody SignupRequest request){ return userService.signup(request);}
 
     @PostMapping("/login")
+    @ResponseStatus(HttpStatus.CREATED)
     public TokenResponse login(@RequestBody LoginRequest request){
         UserResponse userResponse = userService.login(request);
         return jwtProvider.createTokenByLogin(userResponse);
