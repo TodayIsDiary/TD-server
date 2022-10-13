@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
@@ -42,12 +44,12 @@ public class UserController {
     }
 
     @PostMapping("/lost/password")
-    public void mail(@RequestBody MailDto dto){
+    public void mail(@Valid @RequestBody MailDto dto){
         userService.lostPassword(dto);
     }
 
     @PatchMapping("/lost/password")
-    public void setPassword(@RequestBody PasswordRequest request){
+    public void setPassword(@Valid @RequestBody PasswordRequest request){
         userService.setPassword(request);
     }
 }
