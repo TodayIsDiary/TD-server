@@ -8,7 +8,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -16,11 +16,12 @@ public class MailService {
 
     private final JavaMailSender javaMailSender;
     private final MailRepository mailRepository;
-    Random random = new Random();
 
     private String randomMessage(String accountId){
 
+        SecureRandom random = new SecureRandom();
         StringBuilder sb = new StringBuilder();
+
         for(int i=0; i<4; i++){
             sb.append(random.nextInt(10));
         }
