@@ -16,9 +16,10 @@ public class MailService {
 
     private final JavaMailSender javaMailSender;
     private final MailRepository mailRepository;
+    Random random = new Random();
 
     private String randomMessage(String accountId){
-        Random random = new Random();
+
         StringBuilder sb = new StringBuilder();
         for(int i=0; i<4; i++){
             sb.append(random.nextInt(10));
