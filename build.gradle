@@ -44,6 +44,9 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.28'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
+
     // SMTP
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
