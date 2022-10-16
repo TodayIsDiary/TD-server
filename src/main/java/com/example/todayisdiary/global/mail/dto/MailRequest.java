@@ -1,13 +1,13 @@
 package com.example.todayisdiary.global.mail.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.Email;
 
 @Getter
-@AllArgsConstructor
-public class MailDto {
+@RequiredArgsConstructor
+public class MailRequest {
     @Email
-    private String adress;
+    private String email;
 }
