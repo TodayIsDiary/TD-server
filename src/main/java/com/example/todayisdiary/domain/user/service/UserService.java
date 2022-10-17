@@ -1,21 +1,15 @@
 package com.example.todayisdiary.domain.user.service;
 
-import com.example.todayisdiary.domain.user.dto.LoginRequest;
-import com.example.todayisdiary.domain.user.dto.PasswordRequest;
-import com.example.todayisdiary.domain.user.dto.SignupRequest;
-import com.example.todayisdiary.domain.user.dto.UserResponse;
+import com.example.todayisdiary.domain.user.dto.*;
 import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.repository.UserRepository;
-import com.example.todayisdiary.global.mail.dto.MailDto;
-import com.example.todayisdiary.global.mail.entity.Mail;
-import com.example.todayisdiary.global.mail.repository.MailRepository;
+import com.example.todayisdiary.global.mail.dto.MailRequest;
 import com.example.todayisdiary.global.mail.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +17,10 @@ import javax.transaction.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MailRepository mailRepository;
     private final MailService mailService;
 
-    public UserResponse signup(SignupRequest request){
+    // 회원 가입 POST, /user/signup
+    public void signup(SignupRequest request) {
         boolean exists = userRepository.existsByEmail(request.getEmail());
         boolean exists2 = userRepository.existsByAccountId(request.getAccountId());
         if (exists) throw new IllegalStateException("이미 가입하신 이메일 입니다.");
@@ -41,53 +35,97 @@ public class UserService {
                 .introduction(request.getIntroduction()).build();
 
         user = userRepository.save(user);
-        log.info("user = {}", user);
-        return UserResponse.of(user);
     }
 
+    // 자체 로그인, POST , /user/login
     @Transactional
-    public UserResponse login(LoginRequest request){
+    public UserResponse login(LoginRequest request) {
 
         User user = userRepository.findByAccountId(request.getAccountId())
                 .orElseThrow(() -> new IllegalArgumentException("아이디가 맞지 않습니다."));
 
-        if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new IllegalStateException("비밀번호가 맞지 않습니다.");
         }
 
         return UserResponse.of(user);
     }
 
-    // 이메일 코드 보낼때
-    public void lostPassword(MailDto mailDto){
+    // 이메일 코드 보낼때, POST , /user/lost/password
+    public void lostPassword(MailRequest mailDto) throws Exception {
 
-        User user = userRepository.findByEmail(mailDto.getAdress())
+        User user = userRepository.findByEmail(mailDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("이메일을 찾을 수 없습니다."));
 
-        mailService.mailSend(mailDto,user.getAccountId());
+        mailService.mailSend(mailDto, user.getAccountId());
 
     }
 
-    // 코드 인증후 비밀번호 변경
-    public void setPassword(PasswordRequest request){
+    // 코드 인증후 비밀번호 변경, PATCH , /user/lost/password
+    @Transactional
+    public void setPassword(PasswordRequest request) {
 
-        Mail mail = mailRepository.findByCode(request.getCode())
-                .orElseThrow(() -> new IllegalArgumentException("코드를 다시 입력 해주세요."));
+        User user = userRepository.findByCode(request.getCode())
+                .orElseThrow(() -> new IllegalArgumentException("코드를 다시 입력 해주세요.."));
 
-        User user = userRepository.findByAccountId(mail.getAccountId())
-                .orElseThrow(() -> new IllegalArgumentException("인증번호와 맞는 이메일이 없습니다..?"));
+        if (user.getCode() != null) {
 
-        if(!request.getNewPassword().equals(request.getNewPasswordValid())){
-            throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+            if (!request.getNewPassword().equals(request.getNewPasswordValid())) {
+                throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+            }
+
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            user.setCode(null);
+            userRepository.save(user);
         }
 
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+    }
+
+    // 토큰 비밀번호 변경, PATCH, /user/password
+    public void setPasswords(String accountId, PasswordRequest request) {
+
+        User user = userRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        if (passwordEncoder.matches(request.getOriginalPassword(), user.getPassword())){
+            if(request.getNewPassword().equals(request.getNewPasswordValid())){
+                user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+                userRepository.save(user);
+                log.info("{} 님의 비밀번호가 {} 바꼈습니다.",accountId,request.getNewPassword());
+            }else throw new IllegalStateException("변경하는 비밀번호가 맞지 않습니다.");
+        }else throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+    }
+
+    // 내 정보 불러오기, GET, /user
+    public User getUser(String accountId){
+
+        return userRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+    }
+
+    // 마이페이지 수정, PATCH, /user/change , 수정 되는것 : nickName, introduction
+    public void setUser(String accountId, UserRequest request){
+
+        User user = userRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        user.setUser(request.getNickName(),request.getIntroduction());
         userRepository.save(user);
-        mailRepository.delete(mail);
     }
 
-    // 토큰 비밀번호 변경
-    public void setPasswords(String accountId, PasswordRequest request){
+    // 회원 탈퇴하기, DELETE, /user/leave
+    public void leaveUser(String accountId){
+
+        User user = userRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        userRepository.delete(user);
+    }
+
+    // 자신의 작성한 게시글 리스트, GET, /user/title-list
+    public void myPost(){
 
     }
+
+
 }
