@@ -9,7 +9,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -30,13 +29,15 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
             http
-                    .csrf().disable()
-                    .cors().disable()
-                    .formLogin().disable()
-
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .rememberMe()
+                    .key("uniqueAndSecret")
+                    .rememberMeParameter("remember-me")
+                    .tokenValiditySeconds(86400 * 14)
 
                     .and()
+
+                    //.csrf().disable()
+                    //.cors().disable()
 
                     .authorizeRequests()
                     .antMatchers(HttpMethod.POST,"/user/login").permitAll()
@@ -49,6 +50,11 @@ public class SecurityConfig {
                     .antMatchers("/v3/api-docs/**").permitAll()
 
                     .anyRequest().authenticated()
+
+                    .and()
+
+                    .logout()
+                    .deleteCookies("remember-me")
 
                     .and()
 
