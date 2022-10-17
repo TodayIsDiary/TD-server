@@ -42,6 +42,8 @@ public class User {
 
     private String introduction;
 
+    private String code;
+
     @Builder
     public User(String accountId, String nickName, String email, String password, String introduction, Sex sex){
         this.accountId = accountId;
@@ -61,4 +63,6 @@ public class User {
     public void setPassword(String password){
         this.password = password;
     }
+
+    public void setCode(String code){ this.code = code;}
 }
