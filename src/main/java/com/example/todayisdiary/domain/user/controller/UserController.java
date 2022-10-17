@@ -5,7 +5,7 @@ import com.example.todayisdiary.domain.user.dto.PasswordRequest;
 import com.example.todayisdiary.domain.user.dto.SignupRequest;
 import com.example.todayisdiary.domain.user.dto.UserResponse;
 import com.example.todayisdiary.domain.user.service.UserService;
-import com.example.todayisdiary.global.mail.dto.MailDto;
+import com.example.todayisdiary.global.mail.dto.MailRequest;
 import com.example.todayisdiary.global.security.auth.AuthDetails;
 import com.example.todayisdiary.global.security.jwt.JwtProvider;
 import com.example.todayisdiary.global.security.jwt.dto.TokenResponse;
@@ -27,7 +27,7 @@ public class UserController {
     private final UserService userService;
     public final JwtProvider jwtProvider;
 
-    @Operation(summary = "회원가입") 
+    @Operation(summary = "회원가입")
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse signUp(@RequestBody SignupRequest request){ return userService.signup(request);}
@@ -51,7 +51,7 @@ public class UserController {
 
     @Operation(summary = "비밀번호 찾기-이메일 입력")
     @PostMapping("/lost/password")
-    public void mail(@Valid @RequestBody MailDto dto){
+    public void mail(@Valid @RequestBody MailRequest dto)throws Exception{
         userService.lostPassword(dto);
     }
 
