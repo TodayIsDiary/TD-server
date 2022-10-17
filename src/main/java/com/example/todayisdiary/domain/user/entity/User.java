@@ -22,7 +22,7 @@ public class User {
     private String accountId;
 
     // 닉네임
-    @Length(min = 3, max = 12)
+    @Length(min = 2, max = 12)
     private String nickName;
 
     @Email
