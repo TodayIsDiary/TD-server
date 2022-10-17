@@ -1,9 +1,7 @@
 package com.example.todayisdiary.domain.user.controller;
 
-import com.example.todayisdiary.domain.user.dto.LoginRequest;
-import com.example.todayisdiary.domain.user.dto.PasswordRequest;
-import com.example.todayisdiary.domain.user.dto.SignupRequest;
-import com.example.todayisdiary.domain.user.dto.UserResponse;
+import com.example.todayisdiary.domain.user.dto.*;
+import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.service.UserService;
 import com.example.todayisdiary.global.mail.dto.MailRequest;
 import com.example.todayisdiary.global.security.auth.AuthDetails;
@@ -13,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +29,7 @@ public class UserController {
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse signUp(@RequestBody SignupRequest request){ return userService.signup(request);}
+    public void signUp(@RequestBody SignupRequest request){ userService.signup(request);}
 
     @Operation(summary = "로그인")
     @PostMapping("/login")
@@ -55,9 +54,32 @@ public class UserController {
         userService.lostPassword(dto);
     }
 
-    @Operation(summary = "비밀번호 찾기")
+    @Operation(summary = "이메일-비밀번호 찾기")
     @PatchMapping("/lost/password")
-    public void setPassword(@Valid @RequestBody PasswordRequest request){
+    public void setEmailPassword(@Valid @RequestBody PasswordRequest request){
         userService.setPassword(request);
     }
+
+    @Operation(summary = "비밀번호 변경-토큰")
+    @PatchMapping("/password")
+    public void setPassword(Authentication authentication, @Valid @RequestBody PasswordRequest request)
+    {
+        userService.setPasswords(authentication.getName(),request);
+    }
+
+    @Operation(summary = "내 정보 불러오기")
+    @GetMapping
+    public User getUser(Authentication authentication){ return userService.getUser(authentication.getName());}
+
+    @Operation(summary = "내 정보 수정하기")
+    @PatchMapping("/change")
+    public void setUser(Authentication authentication, @RequestBody UserRequest request)
+    {
+        userService.setUser(authentication.getName(), request);
+    }
+
+    @Operation(summary = "회원 탈퇴하기")
+    @DeleteMapping("/leave")
+    public void leaveUser(Authentication authentication){ userService.leaveUser(authentication.getName());}
+
 }
