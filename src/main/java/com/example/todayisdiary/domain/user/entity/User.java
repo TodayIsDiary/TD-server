@@ -1,5 +1,6 @@
 package com.example.todayisdiary.domain.user.entity;
 
+import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.enums.Sex;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.List;
 
 @NoArgsConstructor
 @Entity
@@ -43,6 +45,9 @@ public class User {
     private String introduction;
 
     private String code;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Board> boards;
 
     @Builder
     public User(String accountId, String nickName, String email, String password, String introduction, Sex sex){
