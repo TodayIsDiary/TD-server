@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
 
-    // 회원 가입 POST, /user/signup
+    @Override
     public void signup(SignupRequest request) {
         boolean exists = userRepository.existsByEmail(request.getEmail());
         boolean exists2 = userRepository.existsByAccountId(request.getAccountId());
@@ -34,11 +34,11 @@ public class UserService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .introduction(request.getIntroduction()).build();
 
-        user = userRepository.save(user);
+        userRepository.save(user);
     }
 
-    // 자체 로그인, POST , /user/login
     @Transactional
+    @Override
     public UserResponse login(LoginRequest request) {
 
         User user = userRepository.findByAccountId(request.getAccountId())
@@ -51,7 +51,7 @@ public class UserService {
         return UserResponse.of(user);
     }
 
-    // 이메일 코드 보낼때, POST , /user/lost/password
+    @Override
     public void lostPassword(MailRequest mailDto) throws Exception {
 
         User user = userRepository.findByEmail(mailDto.getEmail())
@@ -61,8 +61,8 @@ public class UserService {
 
     }
 
-    // 코드 인증후 비밀번호 변경, PATCH , /user/lost/password
     @Transactional
+    @Override
     public void setPassword(PasswordRequest request) {
 
         User user = userRepository.findByCode(request.getCode())
@@ -81,40 +81,40 @@ public class UserService {
 
     }
 
-    // 토큰 비밀번호 변경, PATCH, /user/password
+    @Override
     public void setPasswords(String accountId, PasswordRequest request) {
 
         User user = userRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
 
-        if (passwordEncoder.matches(request.getOriginalPassword(), user.getPassword())){
-            if(request.getNewPassword().equals(request.getNewPasswordValid())){
+        if (passwordEncoder.matches(request.getOriginalPassword(), user.getPassword())) {
+            if (request.getNewPassword().equals(request.getNewPasswordValid())) {
                 user.setPassword(passwordEncoder.encode(request.getNewPassword()));
                 userRepository.save(user);
-                log.info("{} 님의 비밀번호가 {} 바꼈습니다.",accountId,request.getNewPassword());
-            }else throw new IllegalStateException("변경하는 비밀번호가 맞지 않습니다.");
-        }else throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+                log.info("{} 님의 비밀번호가 {} 바꼈습니다.", accountId, request.getNewPassword());
+            } else throw new IllegalStateException("변경하는 비밀번호가 맞지 않습니다.");
+        } else throw new IllegalStateException("비밀번호가 맞지 않습니다.");
     }
 
-    // 내 정보 불러오기, GET, /user
-    public User getUser(String accountId){
+    @Override
+    public User getUser(String accountId) {
 
         return userRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
     }
 
-    // 마이페이지 수정, PATCH, /user/change , 수정 되는것 : nickName, introduction
-    public void setUser(String accountId, UserRequest request){
+    @Override
+    public void setUser(String accountId, UserRequest request) {
 
         User user = userRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
 
-        user.setUser(request.getNickName(),request.getIntroduction());
+        user.setUser(request.getNickName(), request.getIntroduction());
         userRepository.save(user);
     }
 
-    // 회원 탈퇴하기, DELETE, /user/leave
-    public void leaveUser(String accountId){
+    @Override
+    public void leaveUser(String accountId) {
 
         User user = userRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
@@ -123,7 +123,7 @@ public class UserService {
     }
 
     // 자신의 작성한 게시글 리스트, GET, /user/title-list
-    public void myPost(){
+    public void myPost() {
 
     }
 
