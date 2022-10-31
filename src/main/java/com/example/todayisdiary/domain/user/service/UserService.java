@@ -29,4 +29,6 @@ public interface UserService {
 
     // 회원 탈퇴하기, DELETE, /user/leave
     void leaveUser(String accountId);
+
+    void signupEmail(MailRequest mailDto) throws Exception;
 }
