@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @Tag(name = "user", description = "유저에 대한 API 입니다.")
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
@@ -81,5 +81,12 @@ public class UserController {
     @Operation(summary = "회원 탈퇴하기")
     @DeleteMapping("/leave")
     public void leaveUser(Authentication authentication){ userService.leaveUser(authentication.getName());}
+
+    @Operation(summary = "회원가입 이메일 인증")
+    @PostMapping("/email")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void signupEmail(@RequestBody MailRequest request) throws Exception {
+        userService.signupEmail(request);
+    }
 
 }
