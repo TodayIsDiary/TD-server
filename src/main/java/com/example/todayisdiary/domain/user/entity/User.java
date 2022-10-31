@@ -3,6 +3,7 @@ package com.example.todayisdiary.domain.user.entity;
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.enums.Sex;
+import com.example.todayisdiary.global.mail.entity.Mail;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,10 +45,11 @@ public class User {
 
     private String introduction;
 
-    private String code;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Board> boards;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Mail> mails;
 
     @Builder
     public User(String accountId, String nickName, String email, String password, String introduction, Sex sex){
@@ -69,5 +71,4 @@ public class User {
         this.password = password;
     }
 
-    public void setCode(String code){ this.code = code;}
 }
