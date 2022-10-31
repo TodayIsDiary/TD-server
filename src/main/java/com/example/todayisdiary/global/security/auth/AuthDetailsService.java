@@ -16,7 +16,7 @@ public class AuthDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String accountId) throws UsernameNotFoundException {
-        User user = userRepository.findByAccountId(accountId)
+        User user = userRepository.findUserByAccountId(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("아이디를 찾을 수 없습니다."));
         return new AuthDetails(user);
     }
