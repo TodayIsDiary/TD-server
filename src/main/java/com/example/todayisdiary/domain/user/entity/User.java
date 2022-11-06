@@ -4,6 +4,7 @@ import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.enums.Sex;
 import com.example.todayisdiary.global.mail.entity.Mail;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.List;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
 public class User {
