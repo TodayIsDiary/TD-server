@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +23,7 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
-    public final JwtProvider jwtProvider;
+    private final JwtProvider jwtProvider;
 
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
@@ -40,7 +39,7 @@ public class UserController {
     }
 
     @Operation(summary = "토큰 재발급")
-    @GetMapping("/reissue")
+    @PostMapping("/reissue")
     public TokenResponse reissue(
             @AuthenticationPrincipal AuthDetails authDetails
     ){
@@ -57,30 +56,30 @@ public class UserController {
     @Operation(summary = "이메일-비밀번호 찾기")
     @PatchMapping("/lost/password")
     public void setEmailPassword(@Valid @RequestBody PasswordRequest request){
-        userService.setPassword(request);
+        userService.setPasswordEmail(request);
     }
 
     @Operation(summary = "비밀번호 변경-토큰")
     @PatchMapping("/password")
-    public void setPassword(Authentication authentication, @Valid @RequestBody PasswordRequest request)
+    public void setPassword( @Valid @RequestBody PasswordRequest request)
     {
-        userService.setPasswords(authentication.getName(),request);
+        userService.setPasswords(request);
     }
 
     @Operation(summary = "내 정보 불러오기")
-    @GetMapping
-    public User getUser(Authentication authentication){ return userService.getUser(authentication.getName());}
+    @GetMapping()
+    public UserInfoResponse getUser(){ return userService.getUser();}
 
     @Operation(summary = "내 정보 수정하기")
     @PatchMapping("/change")
-    public void setUser(Authentication authentication, @RequestBody UserRequest request)
+    public void setUser(@RequestBody UserRequest request)
     {
-        userService.setUser(authentication.getName(), request);
+        userService.setUser(request);
     }
 
     @Operation(summary = "회원 탈퇴하기")
     @DeleteMapping("/leave")
-    public void leaveUser(Authentication authentication){ userService.leaveUser(authentication.getName());}
+    public void leaveUser(){ userService.leaveUser();}
 
     @Operation(summary = "회원가입 이메일 인증")
     @PostMapping("/email")
