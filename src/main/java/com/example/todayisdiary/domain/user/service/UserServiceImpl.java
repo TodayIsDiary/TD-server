@@ -2,6 +2,7 @@ package com.example.todayisdiary.domain.user.service;
 
 import com.example.todayisdiary.domain.user.dto.*;
 import com.example.todayisdiary.domain.user.entity.User;
+import com.example.todayisdiary.domain.user.facade.UserFacade;
 import com.example.todayisdiary.domain.user.repository.UserRepository;
 import com.example.todayisdiary.global.mail.dto.MailRequest;
 import com.example.todayisdiary.global.mail.entity.Mail;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private final UserFacade userFacade;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
@@ -52,8 +54,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse login(LoginRequest request) {
 
-        User user = userRepository.findUserByAccountId(request.getAccountId())
-                .orElseThrow(() -> new IllegalArgumentException("아이디가 맞지 않습니다."));
+        User user = userFacade.getUserByAccountId(request.getAccountId());
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new IllegalStateException("비밀번호가 맞지 않습니다.");
@@ -65,8 +66,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void lostPassword(MailRequest mailDto) throws Exception {
 
-        User user = userRepository.findUserByEmail(mailDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("이메일을 찾을 수 없습니다."));
+        User user = userFacade.getUserByEmail(mailDto.getEmail());
 
         mailService.mailSend(mailDto, user.getAccountId());
 
@@ -74,13 +74,12 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void setPassword(PasswordRequest request) {
+    public void setPasswordEmail(PasswordRequest request) {
 
         Mail mail = mailRepository.findMailByCode(request.getCode())
                 .orElseThrow(() -> new IllegalArgumentException("코드를 다시 입력 해주세요.."));
 
-        User user = userRepository.findUserByEmail(mail.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다.."));
+        User user = userFacade.getUserByEmail(mail.getEmail());
 
         if (!request.getNewPassword().equals(request.getNewPasswordValid())) {
             throw new IllegalStateException("비밀번호가 맞지 않습니다.");
@@ -92,57 +91,55 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     @Override
-    public void setPasswords(String accountId, PasswordRequest request) {
+    public void setPasswords(PasswordRequest request) {
 
-        User user = userRepository.findUserByAccountId(accountId)
-                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+        User user = userFacade.getCurrentUser();
 
         if (passwordEncoder.matches(request.getOriginalPassword(), user.getPassword())) {
             if (request.getNewPassword().equals(request.getNewPasswordValid())) {
                 user.setPassword(passwordEncoder.encode(request.getNewPassword()));
                 userRepository.save(user);
-                log.info("{} 님의 비밀번호가 {} 바꼈습니다.", accountId, request.getNewPassword());
+                log.info("{} 님의 비밀번호가 {} 바꼈습니다.", user.getAccountId(), request.getNewPassword());
             } else throw new IllegalStateException("변경하는 비밀번호가 맞지 않습니다.");
         } else throw new IllegalStateException("비밀번호가 맞지 않습니다.");
     }
 
     @Override
-    public User getUser(String accountId) {
-
-        return userRepository.findUserByAccountId(accountId)
-                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+    @Transactional(readOnly = true)
+    public UserInfoResponse getUser() {
+        User user = userFacade.getCurrentUser();
+        return UserInfoResponse.builder()
+                .nickName(user.getNickName())
+                .introduction(user.getIntroduction()).build();
     }
 
     @Override
-    public void setUser(String accountId, UserRequest request) {
+    @Transactional
+    public void setUser(UserRequest request) {
 
-        User user = userRepository.findUserByAccountId(accountId)
-                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+        User user = userFacade.getCurrentUser();
 
         user.setUser(request.getNickName(), request.getIntroduction());
         userRepository.save(user);
     }
 
     @Override
-    public void leaveUser(String accountId) {
+    @Transactional
+    public void leaveUser() {
 
-        User user = userRepository.findUserByAccountId(accountId)
-                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+        User user = userFacade.getCurrentUser();
 
         userRepository.delete(user);
     }
 
+    @Transactional
+    @Override
     public void signupEmail(MailRequest mailDto) throws Exception {
 
         mailService.signMailSend(mailDto);
 
     }
-
-    // 자신의 작성한 게시글 리스트, GET, /user/title-list
-    public void myPost() {
-
-    }
-
 
 }
