@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum ContentCategory {
+public enum BoardCategory {
 
     HAPPY("HAPPY", "기쁨"),
     SAD("SAD", "슬픔"),
