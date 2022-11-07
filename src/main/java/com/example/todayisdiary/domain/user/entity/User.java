@@ -64,8 +64,8 @@ public class User {
     }
 
     public void setUser(String nickName, String introduction){
-        if (nickName != null) this.nickName = nickName;
-        if (introduction != null)this.introduction = introduction;
+        this.nickName = nickName;
+        this.introduction = introduction;
     }
 
     public void setPassword(String password){
