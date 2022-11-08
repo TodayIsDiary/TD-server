@@ -19,4 +19,8 @@ public class BoardResponse {
 
     private String writer;
 
+    private int heart;
+
+    private boolean isLiked;
+
 }
