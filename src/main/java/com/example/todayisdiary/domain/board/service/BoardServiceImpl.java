@@ -129,7 +129,9 @@ public class BoardServiceImpl implements BoardService{
                 .content(board.getTitle())
                 .category(board.getCategory())
                 .boardTime(board.getBoardTime())
-                .writer(board.getUser().getNickName()).build();
+                .writer(board.getUser().getNickName())
+                .isLiked(board.isLiked())
+                .heart(board.getHeart()).build();
     }
 
     private void userMatch(Board board){
