@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 
 @Entity
 @Getter
@@ -17,6 +18,7 @@ public class Mail {
 
     private String code;
 
+    @Email
     private String email;
 
     @ManyToOne
