@@ -23,7 +23,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final UserFacade userFacade;
@@ -31,7 +31,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Transactional
     @Override
-    public void createBoard(BoardRequest boardRequest){
+    public void createBoard(BoardRequest boardRequest) {
 
         User user = userFacade.getCurrentUser();
 
@@ -47,7 +47,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Transactional
     @Override
-    public void setBoard(BoardRequest boardRequest, Long id){
+    public void setBoard(BoardRequest boardRequest, Long id) {
         Board board = boardFacade.getBoardById(id);
 
         board.setBord(boardRequest.getTitle(), boardRequest.getContent(), boardRequest.getCategory());
@@ -56,7 +56,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Transactional
     @Override
-    public void delBoard(Long id){
+    public void delBoard(Long id) {
         Board board = boardFacade.getBoardById(id);
         userMatch(board);
 
@@ -65,12 +65,12 @@ public class BoardServiceImpl implements BoardService{
 
     @Transactional(readOnly = true)
     @Override
-    public List<BoardList> boardLists(){
+    public List<BoardList> boardLists() {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         List<Board> boards = boardFacade.getBoardAllById(sort);
         List<BoardList> boardLists = new ArrayList<>();
 
-        for(Board board : boards){
+        for (Board board : boards) {
             BoardList dto = BoardList.builder()
                     .title(board.getTitle())
                     .category(board.getCategory())
@@ -83,13 +83,13 @@ public class BoardServiceImpl implements BoardService{
 
     @Transactional(readOnly = true)
     @Override
-    public List<BoardList> boardCategoryList(BoardCategory category){
+    public List<BoardList> boardCategoryList(BoardCategory category) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         List<Board> boards = boardFacade.getBoardAllById(sort);
         List<BoardList> boardLists = new ArrayList<>();
 
-        for(Board board : boards){
-            if(board.getCategory().equals(category)){
+        for (Board board : boards) {
+            if (board.getCategory().equals(category)) {
                 BoardList dto = BoardList.builder()
                         .title(board.getTitle())
                         .category(board.getCategory())
@@ -109,7 +109,7 @@ public class BoardServiceImpl implements BoardService{
         List<Board> boards = user.getBoards();
         List<BoardList> boardLists = new ArrayList<>();
 
-        for(Board board : boards){
+        for (Board board : boards) {
             BoardList dto = BoardList.builder()
                     .title(board.getTitle())
                     .category(board.getCategory())
@@ -122,7 +122,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Transactional(readOnly = true)
     @Override
-    public BoardResponse boardDetail(Long id){
+    public BoardResponse boardDetail(Long id) {
         Board board = boardFacade.getBoardById(id);
         return BoardResponse.builder()
                 .title(board.getTitle())
@@ -134,9 +134,9 @@ public class BoardServiceImpl implements BoardService{
                 .heart(board.getHeart()).build();
     }
 
-    private void userMatch(Board board){
-        if (board.getUser().getAccountId().equals(userFacade.getCurrentUser().getAccountId()) || userFacade.getCurrentUser().getRole() == Role.ADMIN){
-        }else throw new IllegalStateException("권한이 없습니다.");
+    private void userMatch(Board board) {
+        if (board.getUser().getAccountId().equals(userFacade.getCurrentUser().getAccountId()) || userFacade.getCurrentUser().getRole() == Role.ADMIN) {
+        } else throw new IllegalStateException("권한이 없습니다.");
     }
 
     // 시간, 날짜 차이 구하기
