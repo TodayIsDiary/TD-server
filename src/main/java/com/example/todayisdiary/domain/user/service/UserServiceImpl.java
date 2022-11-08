@@ -91,19 +91,22 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Transactional
     @Override
-    public void setPasswords(PasswordRequest request) {
-
+    @Transactional
+    public void setPasswords(PasswordRequest request){
         User user = userFacade.getCurrentUser();
 
-        if (passwordEncoder.matches(request.getOriginalPassword(), user.getPassword())) {
-            if (request.getNewPassword().equals(request.getNewPasswordValid())) {
-                user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-                userRepository.save(user);
-                log.info("{} 님의 비밀번호가 {} 바꼈습니다.", user.getAccountId(), request.getNewPassword());
-            } else throw new IllegalStateException("변경하는 비밀번호가 맞지 않습니다.");
-        } else throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+        if(!passwordEncoder.matches(request.getOriginalPassword(), user.getPassword())){
+            throw new IllegalStateException("원래 비밀번호가 맞지 않습니다.");
+        }
+
+        if(!request.getNewPassword().equals(request.getNewPasswordValid())){
+            throw new IllegalStateException("변경하는 비밀번호가 맞지 않습니다.");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
     }
 
     @Override
@@ -141,5 +144,4 @@ public class UserServiceImpl implements UserService {
         mailService.signMailSend(mailDto);
 
     }
-
 }
