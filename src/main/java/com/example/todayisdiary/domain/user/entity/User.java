@@ -2,6 +2,7 @@ package com.example.todayisdiary.domain.user.entity;
 
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.like.entity.BoardLike;
+import com.example.todayisdiary.domain.report.entity.Report;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.enums.Sex;
 import com.example.todayisdiary.global.mail.entity.Mail;
@@ -55,6 +56,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<BoardLike> likes;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Report> reports;
 
     @Builder
     public User(String accountId, String nickName, String email, String password, String introduction, Sex sex){
