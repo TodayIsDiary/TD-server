@@ -47,7 +47,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional
     public void delReport(Long id) {
-        if(userFacade.getCurrentUser().getRole() != Role.ADMIN) throw new IllegalStateException("어드민 계정이 아닙니다.");
+        adminAccount();
         Report report = reportFacade.getReportById(id);
         reportRepository.delete(report);
     }
@@ -55,7 +55,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional(readOnly = true)
     public List<ReportList> reportBoardList() {
-        if(userFacade.getCurrentUser().getRole() != Role.ADMIN) throw new IllegalStateException("어드민 계정이 아닙니다.");
+        adminAccount();
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         List<Report> reports = reportFacade.getBoardAllById(sort);
         List<ReportList> reportLists = new ArrayList<>();
@@ -73,7 +73,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional(readOnly = true)
     public ReportResponse detailReport(Long id) {
-        if(userFacade.getCurrentUser().getRole() != Role.ADMIN) throw new IllegalStateException("어드민 계정이 아닙니다.");
+        adminAccount();
         Report report = reportFacade.getReportById(id);
 
         return ReportResponse.builder()
@@ -87,10 +87,13 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional
     public void forceDelBoard(Long id) {
-        if(userFacade.getCurrentUser().getRole() != Role.ADMIN) throw new IllegalStateException("어드민 계정이 아닙니다.");
+        adminAccount();
         Board board = boardFacade.getBoardById(id);
         boardRepository.delete(board);
     }
 
+    private void adminAccount() {
+        if (userFacade.getCurrentUser().getRole() != Role.ADMIN) throw new IllegalStateException("어드민 계정이 아닙니다.");
+    }
 
 }
