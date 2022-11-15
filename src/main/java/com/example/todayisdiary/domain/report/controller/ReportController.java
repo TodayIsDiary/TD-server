@@ -40,13 +40,13 @@ public class ReportController {
 
     @Operation(description = "허위신고 삭제하기")
     @DeleteMapping("/del/{report_id}")
-    public void ReportDel(@PathVariable(name = "report_id") Long id){
+    public void reportDel(@PathVariable(name = "report_id") Long id){
         reportService.delReport(id);
     }
 
     @Operation(description = "부적절한 일기 삭제하기")
     @DeleteMapping("/del/board/{board_id}")
-    public void BoardDel(@PathVariable(name = "board_id") Long id){
+    public void boardDel(@PathVariable(name = "board_id") Long id){
         reportService.forceDelBoard(id);
     }
 }
