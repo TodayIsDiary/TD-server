@@ -25,6 +25,7 @@ public class User {
     private Long id;
 
     // 아이디
+    @Length(min = 3, max = 15)
     private String accountId;
 
     // 닉네임
@@ -46,6 +47,7 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @Length(min = 1, max = 30)
     private String introduction;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
