@@ -62,6 +62,7 @@ public class ReportServiceImpl implements ReportService {
 
         for (Report report : reports) {
             ReportList dto = ReportList.builder()
+                    .reportId(report.getId())
                     .title(report.getTitle())
                     .boardId(report.getBoard().getId())
                     .reporter(report.getUser().getNickName()).build();
@@ -77,6 +78,7 @@ public class ReportServiceImpl implements ReportService {
         Report report = reportFacade.getReportById(id);
 
         return ReportResponse.builder()
+                .reportId(report.getId())
                 .reporter(report.getUser().getNickName())
                 .title(report.getTitle())
                 .content(report.getContent())
