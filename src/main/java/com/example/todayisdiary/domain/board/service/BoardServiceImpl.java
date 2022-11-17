@@ -72,6 +72,7 @@ public class BoardServiceImpl implements BoardService {
 
         for (Board board : boards) {
             BoardList dto = BoardList.builder()
+                    .boardId(board.getId())
                     .title(board.getTitle())
                     .category(board.getCategory())
                     .date(betweenDate(board.getBoardTime()))
@@ -91,6 +92,7 @@ public class BoardServiceImpl implements BoardService {
         for (Board board : boards) {
             if (board.getCategory().equals(category)) {
                 BoardList dto = BoardList.builder()
+                        .boardId(board.getId())
                         .title(board.getTitle())
                         .category(board.getCategory())
                         .date(betweenDate(board.getBoardTime()))
@@ -111,6 +113,7 @@ public class BoardServiceImpl implements BoardService {
 
         for (Board board : boards) {
             BoardList dto = BoardList.builder()
+                    .boardId(board.getId())
                     .title(board.getTitle())
                     .category(board.getCategory())
                     .date(betweenDate(board.getBoardTime()))
@@ -125,6 +128,7 @@ public class BoardServiceImpl implements BoardService {
     public BoardResponse boardDetail(Long id) {
         Board board = boardFacade.getBoardById(id);
         return BoardResponse.builder()
+                .boardId(board.getId())
                 .title(board.getTitle())
                 .content(board.getTitle())
                 .category(board.getCategory())

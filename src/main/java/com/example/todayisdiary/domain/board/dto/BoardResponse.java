@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class BoardResponse {
+    private Long boardId;
+
     private String title;
 
     private String content;
