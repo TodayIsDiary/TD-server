@@ -79,6 +79,7 @@ public class UserController {
 
     @Operation(summary = "회원 탈퇴하기")
     @DeleteMapping("/leave")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void leaveUser(){ userService.leaveUser();}
 
     @Operation(summary = "회원가입 이메일 인증")
