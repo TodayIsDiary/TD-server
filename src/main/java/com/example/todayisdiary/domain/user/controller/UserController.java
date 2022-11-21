@@ -28,7 +28,7 @@ public class UserController {
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void signUp(@RequestBody SignupRequest request){ userService.signup(request);}
+    public void signUp(@Valid @RequestBody SignupRequest request){ userService.signup(request);}
 
     @Operation(summary = "로그인")
     @PostMapping("/login")
