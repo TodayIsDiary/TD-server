@@ -10,24 +10,22 @@ import com.example.todayisdiary.domain.board.repository.BoardRepository;
 import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
+import com.example.todayisdiary.global.date.DateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-
     private final BoardRepository boardRepository;
     private final UserFacade userFacade;
     private final BoardFacade boardFacade;
+    private final DateService dateService;
 
     @Transactional
     @Override
@@ -49,6 +47,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void setBoard(BoardRequest boardRequest, Long id) {
         Board board = boardFacade.getBoardById(id);
+        userMatch(board);
 
         board.setBord(boardRequest.getTitle(), boardRequest.getContent(), boardRequest.getCategory());
         boardRepository.save(board);
@@ -75,7 +74,7 @@ public class BoardServiceImpl implements BoardService {
                     .boardId(board.getId())
                     .title(board.getTitle())
                     .category(board.getCategory())
-                    .date(betweenDate(board.getBoardTime()))
+                    .date(dateService.betweenDate(board.getBoardTime()))
                     .build();
             boardLists.add(dto);
         }
@@ -95,7 +94,7 @@ public class BoardServiceImpl implements BoardService {
                         .boardId(board.getId())
                         .title(board.getTitle())
                         .category(board.getCategory())
-                        .date(betweenDate(board.getBoardTime()))
+                        .date(dateService.betweenDate(board.getBoardTime()))
                         .build();
                 boardLists.add(dto);
             }
@@ -116,7 +115,7 @@ public class BoardServiceImpl implements BoardService {
                     .boardId(board.getId())
                     .title(board.getTitle())
                     .category(board.getCategory())
-                    .date(betweenDate(board.getBoardTime()))
+                    .date(dateService.betweenDate(board.getBoardTime()))
                     .build();
             boardLists.add(dto);
         }
@@ -132,7 +131,7 @@ public class BoardServiceImpl implements BoardService {
                 .title(board.getTitle())
                 .content(board.getTitle())
                 .category(board.getCategory())
-                .boardTime(board.getBoardTime())
+                .boardTime(dateService.betweenDate(board.getBoardTime()))
                 .writer(board.getUser().getNickName())
                 .isLiked(board.isLiked())
                 .heart(board.getHeart()).build();
@@ -142,24 +141,4 @@ public class BoardServiceImpl implements BoardService {
         if (board.getUser().getAccountId().equals(userFacade.getCurrentUser().getAccountId()) || userFacade.getCurrentUser().getRole() == Role.ADMIN) {
         } else throw new IllegalStateException("권한이 없습니다.");
     }
-
-    // 시간, 날짜 차이 구하기
-    private String betweenDate(LocalDateTime dateTime) {
-        LocalDateTime now = LocalDateTime.now();
-        Duration diff = Duration.between(dateTime.toLocalTime(), now.toLocalTime());
-        if (diff.getSeconds() >= 60) {
-            if (diff.toMinutes() >= 60) {
-                if (diff.toHours() >= 24) {
-                    Period period = Period.between(dateTime.toLocalDate(), now.toLocalDate());
-                    if (period.getDays() >= 30) {
-                        if (period.getMonths() >= 12) {
-                            return period.getYears() + "년전";
-                        } else return period.getMonths() + "달전";
-                    } else return period.getDays() + "일전";
-                }
-            } else return diff.toMinutes() + "분전";
-        } else return "방금전";
-        throw new IllegalStateException("해당 하는 날짜를 찾을 수 없습니다.");
-    }
-
 }
