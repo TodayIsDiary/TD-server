@@ -160,6 +160,8 @@ public class MailServiceImpl implements MailService{
 
     @Override
     public void signMailSend(MailRequest request)throws Exception{
+        boolean exists = userRepository.existsByEmail(request.getEmail());
+        if (exists) throw new IllegalStateException("이미 가입하신 이메일 입니다.");
         MimeMessage message = javaMailSender.createMimeMessage();
 
         message.addRecipients(MimeMessage.RecipientType.TO,request.getEmail()); // 보내는 대상
