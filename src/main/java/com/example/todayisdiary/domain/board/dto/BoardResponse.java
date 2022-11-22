@@ -4,8 +4,6 @@ import com.example.todayisdiary.domain.board.enums.BoardCategory;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Builder
 public class BoardResponse {
@@ -17,7 +15,7 @@ public class BoardResponse {
 
     private BoardCategory category;
 
-    private LocalDateTime boardTime;
+    private String boardTime;
 
     private String writer;
 
