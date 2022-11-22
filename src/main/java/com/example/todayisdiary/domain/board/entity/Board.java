@@ -2,7 +2,7 @@ package com.example.todayisdiary.domain.board.entity;
 
 import com.example.todayisdiary.domain.Chat.entity.Chat;
 import com.example.todayisdiary.domain.board.enums.BoardCategory;
-import com.example.todayisdiary.domain.like.entity.BoardLike;
+import com.example.todayisdiary.domain.like.entity.BoardLove;
 import com.example.todayisdiary.domain.report.entity.Report;
 import com.example.todayisdiary.domain.user.entity.User;
 import lombok.AccessLevel;
@@ -48,7 +48,7 @@ public class Board {
     private User user;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
-    private List<BoardLike> likes;
+    private List<BoardLove> likes;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Report> reports;
