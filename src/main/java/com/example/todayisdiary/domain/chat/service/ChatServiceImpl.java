@@ -13,6 +13,7 @@ import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
 import com.example.todayisdiary.global.date.DateService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ChatServiceImpl implements ChatService {
     private final ChatFacade chatFacade;
@@ -105,8 +107,7 @@ public class ChatServiceImpl implements ChatService {
         List<ChatList> chatLists = new ArrayList<>();
 
         for (Chat chat : chats) {
-            if (board.getId().equals(chat.getBoard().getId())) {
-                if (chat.isOriginChat()) {
+            if (board.getId().equals(chat.getBoard().getId()) && chat.isOriginChat()) {
                     ChatList dto = ChatList.builder()
                             .id(chat.getId())
                             .comment(chat.getComment())
@@ -115,7 +116,6 @@ public class ChatServiceImpl implements ChatService {
                             .originChatId(chat.getOriginChatId())
                             .replyChatId(chat.getReplyChatId()).build();
                     chatLists.add(dto);
-                }
             }
         }
         return new ChatResponseList(chatLists);
@@ -147,7 +147,7 @@ public class ChatServiceImpl implements ChatService {
     private void userMath(Chat chat) {
         User user = userFacade.getCurrentUser();
         if (chat.getWriter().equals(user.getNickName()) || user.getRole() == Role.ADMIN) {
-
+            log.info("권한이 성공하였습니다.");
         } else throw new IllegalStateException("작성한 댓글이 아닙니다.");
     }
 
