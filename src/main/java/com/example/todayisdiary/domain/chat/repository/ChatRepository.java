@@ -1,6 +1,6 @@
-package com.example.todayisdiary.domain.Chat.repository;
+package com.example.todayisdiary.domain.chat.repository;
 
-import com.example.todayisdiary.domain.Chat.entity.Chat;
+import com.example.todayisdiary.domain.chat.entity.Chat;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
-package com.example.todayisdiary.domain.Chat.service;
+package com.example.todayisdiary.domain.chat.service;
 
-import com.example.todayisdiary.domain.Chat.dto.ChatRequest;
-import com.example.todayisdiary.domain.Chat.dto.ChatResponseList;
+import com.example.todayisdiary.domain.chat.dto.ChatRequest;
+import com.example.todayisdiary.domain.chat.dto.ChatResponseList;
 
 public interface ChatService {
     void createChat(ChatRequest request, Long id);

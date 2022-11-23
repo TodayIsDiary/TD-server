@@ -1,4 +1,4 @@
-package com.example.todayisdiary.domain.Chat.dto;
+package com.example.todayisdiary.domain.chat.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

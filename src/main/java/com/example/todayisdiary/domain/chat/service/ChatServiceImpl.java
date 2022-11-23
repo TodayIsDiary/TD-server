@@ -1,11 +1,11 @@
-package com.example.todayisdiary.domain.Chat.service;
+package com.example.todayisdiary.domain.chat.service;
 
-import com.example.todayisdiary.domain.Chat.dto.ChatList;
-import com.example.todayisdiary.domain.Chat.dto.ChatRequest;
-import com.example.todayisdiary.domain.Chat.dto.ChatResponseList;
-import com.example.todayisdiary.domain.Chat.entity.Chat;
-import com.example.todayisdiary.domain.Chat.facade.ChatFacade;
-import com.example.todayisdiary.domain.Chat.repository.ChatRepository;
+import com.example.todayisdiary.domain.chat.dto.ChatList;
+import com.example.todayisdiary.domain.chat.dto.ChatRequest;
+import com.example.todayisdiary.domain.chat.dto.ChatResponseList;
+import com.example.todayisdiary.domain.chat.entity.Chat;
+import com.example.todayisdiary.domain.chat.facade.ChatFacade;
+import com.example.todayisdiary.domain.chat.repository.ChatRepository;
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.board.facade.BoardFacade;
 import com.example.todayisdiary.domain.user.entity.User;

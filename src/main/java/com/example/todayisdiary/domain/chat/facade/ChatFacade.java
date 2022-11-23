@@ -1,7 +1,7 @@
-package com.example.todayisdiary.domain.Chat.facade;
+package com.example.todayisdiary.domain.chat.facade;
 
-import com.example.todayisdiary.domain.Chat.entity.Chat;
-import com.example.todayisdiary.domain.Chat.repository.ChatRepository;
+import com.example.todayisdiary.domain.chat.entity.Chat;
+import com.example.todayisdiary.domain.chat.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;

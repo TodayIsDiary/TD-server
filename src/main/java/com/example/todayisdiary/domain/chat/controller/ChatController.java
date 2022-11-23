@@ -1,8 +1,8 @@
-package com.example.todayisdiary.domain.Chat.controller;
+package com.example.todayisdiary.domain.chat.controller;
 
-import com.example.todayisdiary.domain.Chat.dto.ChatRequest;
-import com.example.todayisdiary.domain.Chat.dto.ChatResponseList;
-import com.example.todayisdiary.domain.Chat.service.ChatService;
+import com.example.todayisdiary.domain.chat.dto.ChatRequest;
+import com.example.todayisdiary.domain.chat.dto.ChatResponseList;
+import com.example.todayisdiary.domain.chat.service.ChatService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +50,7 @@ public class ChatController {
     }
 
     @Operation(description = "답글 보기")
-    @GetMapping("/list/reply/{comment_id}")
+    @GetMapping("/list/reply/   {comment_id}")
     public ChatResponseList chatReplyLists(@PathVariable(name = "comment_id") Long id){
         return chatService.chatReplyList(id);
     }
