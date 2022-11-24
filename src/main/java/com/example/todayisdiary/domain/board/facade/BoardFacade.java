@@ -11,7 +11,6 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class BoardFacade {
-
     private final BoardRepository boardRepository;
 
     public Board getBoardById(Long id){

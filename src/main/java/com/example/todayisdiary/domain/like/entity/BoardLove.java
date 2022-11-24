@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BoardLike {
+public class BoardLove {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,7 +26,7 @@ public class BoardLike {
     private Board board;
 
     @Builder
-    public BoardLike(User user, Board board){
+    public BoardLove(User user, Board board){
         this.user = user;
         this.board = board;
     }

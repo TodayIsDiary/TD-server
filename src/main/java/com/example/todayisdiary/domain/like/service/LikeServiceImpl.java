@@ -3,7 +3,7 @@ package com.example.todayisdiary.domain.like.service;
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.board.facade.BoardFacade;
 import com.example.todayisdiary.domain.board.repository.BoardRepository;
-import com.example.todayisdiary.domain.like.entity.BoardLike;
+import com.example.todayisdiary.domain.like.entity.BoardLove;
 import com.example.todayisdiary.domain.like.repository.BoardLikeRepository;
 import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
@@ -31,7 +31,7 @@ public class LikeServiceImpl implements LikeService {
 
         board.likes();
 
-        BoardLike boardLike = BoardLike.builder()
+        BoardLove boardLike = BoardLove.builder()
                 .user(user)
                 .board(board).build();
         board.addHeart();
@@ -45,9 +45,9 @@ public class LikeServiceImpl implements LikeService {
 
         User user = userFacade.getCurrentUser();
         Board board = boardFacade.getBoardById(diaryId);
-        List<BoardLike> like = board.getLikes();
+        List<BoardLove> like = board.getLikes();
 
-        for (BoardLike boardLike : like) {
+        for (BoardLove boardLike : like) {
             if (boardLike.getUser().equals(user)) {
                 board.unlikes();
 
