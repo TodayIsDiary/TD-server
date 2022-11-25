@@ -1,11 +1,11 @@
-package com.example.todayisdiary.domain.chat.service;
+package com.example.todayisdiary.domain.comment.service;
 
-import com.example.todayisdiary.domain.chat.dto.ChatList;
-import com.example.todayisdiary.domain.chat.dto.ChatRequest;
-import com.example.todayisdiary.domain.chat.dto.ChatResponseList;
-import com.example.todayisdiary.domain.chat.entity.Chat;
-import com.example.todayisdiary.domain.chat.facade.ChatFacade;
-import com.example.todayisdiary.domain.chat.repository.ChatRepository;
+import com.example.todayisdiary.domain.comment.dto.CommentList;
+import com.example.todayisdiary.domain.comment.dto.CommentRequest;
+import com.example.todayisdiary.domain.comment.dto.CommentResponseList;
+import com.example.todayisdiary.domain.comment.entity.Chat;
+import com.example.todayisdiary.domain.comment.facade.CommentFacade;
+import com.example.todayisdiary.domain.comment.repository.CommentRepository;
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.board.facade.BoardFacade;
 import com.example.todayisdiary.domain.user.entity.User;
@@ -24,16 +24,16 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ChatServiceImpl implements ChatService {
-    private final ChatFacade chatFacade;
+public class CommentServiceImpl implements CommentService {
+    private final CommentFacade commentFacade;
     private final UserFacade userFacade;
     private final BoardFacade boardFacade;
-    private final ChatRepository chatRepository;
+    private final CommentRepository commentRepository;
     private final DateService dateService;
 
     @Override
     @Transactional
-    public void createChat(ChatRequest request, Long id) {
+    public void createChat(CommentRequest request, Long id) {
         User user = userFacade.getCurrentUser();
         Board board = boardFacade.getBoardById(id);
 
@@ -45,14 +45,14 @@ public class ChatServiceImpl implements ChatService {
                 .originChatId(0L)
                 .replyChatId(0L).build();
         chat.isOrigin();
-        chatRepository.save(chat);
+        commentRepository.save(chat);
     }
 
     @Override
     @Transactional
-    public void createReplyChat(ChatRequest request, Long id) {
+    public void createReplyChat(CommentRequest request, Long id) {
         User user = userFacade.getCurrentUser();
-        Chat chat = chatFacade.getChatById(id);
+        Chat chat = commentFacade.getChatById(id);
 
         if (chat.isOriginChat()) {
             Chat chats = Chat.builder()
@@ -62,7 +62,7 @@ public class ChatServiceImpl implements ChatService {
                     .board(chat.getBoard())
                     .originChatId(chat.getId())
                     .replyChatId(chat.getId()).build();
-            chatRepository.save(chats);
+            commentRepository.save(chats);
         } else {
             Chat chats = Chat.builder()
                     .comment(request.getComment())
@@ -71,77 +71,77 @@ public class ChatServiceImpl implements ChatService {
                     .board(chat.getBoard())
                     .originChatId(chat.getOriginChatId())
                     .replyChatId(chat.getId()).build();
-            chatRepository.save(chats);
+            commentRepository.save(chats);
         }
     }
 
     @Override
     @Transactional
-    public void setChat(ChatRequest request, Long id) {
-        Chat chat = chatFacade.getChatById(id);
+    public void setChat(CommentRequest request, Long id) {
+        Chat chat = commentFacade.getChatById(id);
         userMath(chat);
 
         chat.setChat(request.getComment());
-        chatRepository.save(chat);
+        commentRepository.save(chat);
     }
 
     @Override
     @Transactional
     public void deleteChat(Long id) {
-        Chat chat = chatFacade.getChatById(id);
+        Chat chat = commentFacade.getChatById(id);
         userMath(chat);
 
         if (chat.isOriginChat()) {
-            chatRepository.delete(chat);
-            List<Chat> chats = chatFacade.getChatByIdList(id);
-            chatRepository.deleteAll(chats);
-        } else chatRepository.delete(chat);
+            commentRepository.delete(chat);
+            List<Chat> chats = commentFacade.getChatByIdList(id);
+            commentRepository.deleteAll(chats);
+        } else commentRepository.delete(chat);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ChatResponseList chatList(Long id) {
+    public CommentResponseList chatList(Long id) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         Board board = boardFacade.getBoardById(id);
-        List<Chat> chats = chatFacade.getChatAllById(sort);
-        List<ChatList> chatLists = new ArrayList<>();
+        List<Chat> chats = commentFacade.getChatAllById(sort);
+        List<CommentList> commentLists = new ArrayList<>();
 
         for (Chat chat : chats) {
             if (board.getId().equals(chat.getBoard().getId()) && chat.isOriginChat()) {
-                    ChatList dto = ChatList.builder()
+                    CommentList dto = CommentList.builder()
                             .id(chat.getId())
                             .comment(chat.getComment())
                             .writer(chat.getWriter())
                             .date(dateService.betweenDate(chat.getChatTime()))
                             .originChatId(chat.getOriginChatId())
                             .replyChatId(chat.getReplyChatId()).build();
-                    chatLists.add(dto);
+                    commentLists.add(dto);
             }
         }
-        return new ChatResponseList(chatLists);
+        return new CommentResponseList(commentLists);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ChatResponseList chatReplyList(Long id) {
+    public CommentResponseList chatReplyList(Long id) {
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
-        Chat chat = chatFacade.getChatById(id);
-        List<Chat> chats = chatFacade.getChatAllById(sort);
-        List<ChatList> chatLists = new ArrayList<>();
+        Chat chat = commentFacade.getChatById(id);
+        List<Chat> chats = commentFacade.getChatAllById(sort);
+        List<CommentList> commentLists = new ArrayList<>();
 
         for (Chat c : chats) {
             if (chat.getId().equals(c.getOriginChatId())) {
-                ChatList dto = ChatList.builder()
+                CommentList dto = CommentList.builder()
                         .id(c.getId())
                         .comment(c.getComment())
                         .writer(c.getWriter())
                         .date(dateService.betweenDate(c.getChatTime()))
                         .originChatId(c.getOriginChatId())
                         .replyChatId(c  .getReplyChatId()).build();
-                chatLists.add(dto);
+                commentLists.add(dto);
             }
         }
-        return new ChatResponseList(chatLists);
+        return new CommentResponseList(commentLists);
     }
 
     private void userMath(Chat chat) {

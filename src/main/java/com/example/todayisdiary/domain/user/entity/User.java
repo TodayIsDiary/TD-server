@@ -1,6 +1,6 @@
 package com.example.todayisdiary.domain.user.entity;
 
-import com.example.todayisdiary.domain.chat.entity.Chat;
+import com.example.todayisdiary.domain.comment.entity.Chat;
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.like.entity.BoardLove;
 import com.example.todayisdiary.domain.report.entity.Report;

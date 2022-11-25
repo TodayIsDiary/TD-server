@@ -1,4 +1,4 @@
-package com.example.todayisdiary.domain.chat.entity;
+package com.example.todayisdiary.domain.comment.entity;
 
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.user.entity.User;
