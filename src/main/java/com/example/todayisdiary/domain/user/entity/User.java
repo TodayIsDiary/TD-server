@@ -1,6 +1,6 @@
 package com.example.todayisdiary.domain.user.entity;
 
-import com.example.todayisdiary.domain.comment.entity.Chat;
+import com.example.todayisdiary.domain.comment.entity.Comment;
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.like.entity.BoardLove;
 import com.example.todayisdiary.domain.report.entity.Report;
@@ -64,7 +64,7 @@ public class User {
     private List<Report> reports;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Chat> chats;
+    private List<Comment> comments;
 
     @Builder
     public User(String accountId, String nickName, String email, String password, String introduction, Sex sex){

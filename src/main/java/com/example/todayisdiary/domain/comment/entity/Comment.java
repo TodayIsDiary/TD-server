@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Chat {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,7 +51,7 @@ public class Chat {
     }
 
     @Builder
-    public Chat(String writer, String comment, User user, Board board, Long originChatId, Long replyChatId) {
+    public Comment(String writer, String comment, User user, Board board, Long originChatId, Long replyChatId) {
         this.writer = writer;
         this.comment = comment;
         this.user = user;

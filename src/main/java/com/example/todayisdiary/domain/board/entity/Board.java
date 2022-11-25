@@ -1,6 +1,6 @@
 package com.example.todayisdiary.domain.board.entity;
 
-import com.example.todayisdiary.domain.comment.entity.Chat;
+import com.example.todayisdiary.domain.comment.entity.Comment;
 import com.example.todayisdiary.domain.board.enums.BoardCategory;
 import com.example.todayisdiary.domain.like.entity.BoardLove;
 import com.example.todayisdiary.domain.report.entity.Report;
@@ -54,7 +54,7 @@ public class Board {
     private List<Report> reports;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
-    private List<Chat> chats;
+    private List<Comment> comments;
 
     public void likes(){
         this.isLiked = true;
