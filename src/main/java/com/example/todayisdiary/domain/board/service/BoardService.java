@@ -1,11 +1,9 @@
 package com.example.todayisdiary.domain.board.service;
 
-import com.example.todayisdiary.domain.board.dto.BoardList;
 import com.example.todayisdiary.domain.board.dto.BoardRequest;
 import com.example.todayisdiary.domain.board.dto.BoardResponse;
+import com.example.todayisdiary.domain.board.dto.BoardResponseList;
 import com.example.todayisdiary.domain.board.enums.BoardCategory;
-
-import java.util.List;
 
 public interface BoardService {
     void createBoard(BoardRequest boardRequest);
@@ -14,11 +12,13 @@ public interface BoardService {
 
     void delBoard(Long id);
 
-    List<BoardList> boardLists();
+    BoardResponseList boardLists();
 
-    List<BoardList> boardCategoryList(BoardCategory category);
+    BoardResponseList boardCategoryList(BoardCategory category);
 
-    List<BoardList> myPost();
+    BoardResponseList boardHeartList();
+
+    BoardResponseList myPost();
 
     BoardResponse boardDetail(Long id);
 }

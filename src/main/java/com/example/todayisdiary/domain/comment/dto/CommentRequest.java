@@ -1,10 +1,10 @@
-package com.example.todayisdiary.domain.chat.dto;
+package com.example.todayisdiary.domain.comment.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ChatRequest {
+public class CommentRequest {
     private String comment;
 }

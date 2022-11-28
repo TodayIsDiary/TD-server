@@ -1,8 +1,9 @@
 package com.example.todayisdiary.domain.user.entity;
 
-import com.example.todayisdiary.domain.chat.entity.Chat;
+import com.example.todayisdiary.domain.comment.entity.Comment;
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.like.entity.BoardLove;
+import com.example.todayisdiary.domain.like.entity.CommentLove;
 import com.example.todayisdiary.domain.report.entity.Report;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.enums.Sex;
@@ -58,13 +59,16 @@ public class User {
     private List<Mail> mails;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<BoardLove> likes;
+    private List<BoardLove> boardLoves;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<CommentLove> commentLoves;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Report> reports;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Chat> chats;
+    private List<Comment> comments;
 
     @Builder
     public User(String accountId, String nickName, String email, String password, String introduction, Sex sex){

@@ -3,6 +3,7 @@ package com.example.todayisdiary.domain.board.service;
 import com.example.todayisdiary.domain.board.dto.BoardList;
 import com.example.todayisdiary.domain.board.dto.BoardRequest;
 import com.example.todayisdiary.domain.board.dto.BoardResponse;
+import com.example.todayisdiary.domain.board.dto.BoardResponseList;
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.board.enums.BoardCategory;
 import com.example.todayisdiary.domain.board.facade.BoardFacade;
@@ -64,7 +65,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<BoardList> boardLists() {
+    public BoardResponseList boardLists() {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         List<Board> boards = boardFacade.getBoardAllById(sort);
         List<BoardList> boardLists = new ArrayList<>();
@@ -78,12 +79,12 @@ public class BoardServiceImpl implements BoardService {
                     .build();
             boardLists.add(dto);
         }
-        return boardLists;
+        return new BoardResponseList(boardLists);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<BoardList> boardCategoryList(BoardCategory category) {
+    public BoardResponseList boardCategoryList(BoardCategory category) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         List<Board> boards = boardFacade.getBoardAllById(sort);
         List<BoardList> boardLists = new ArrayList<>();
@@ -99,13 +100,32 @@ public class BoardServiceImpl implements BoardService {
                 boardLists.add(dto);
             }
         }
-        return boardLists;
+        return new BoardResponseList(boardLists);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public BoardResponseList boardHeartList() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "heart");
+        List<Board> boards = boardFacade.getBoardAllById(sort);
+        List<BoardList> boardLists = new ArrayList<>();
+
+        for (Board board : boards) {
+            BoardList dto = BoardList.builder()
+                    .boardId(board.getId())
+                    .title(board.getTitle())
+                    .category(board.getCategory())
+                    .date(dateService.betweenDate(board.getBoardTime()))
+                    .build();
+            boardLists.add(dto);
+        }
+        return new BoardResponseList(boardLists);
     }
 
     // 자신의 작성한 게시글 리스트, GET, /user/title-list
     @Transactional(readOnly = true)
     @Override
-    public List<BoardList> myPost() {
+    public BoardResponseList myPost() {
         User user = userFacade.getCurrentUser();
         List<Board> boards = user.getBoards();
         List<BoardList> boardLists = new ArrayList<>();
@@ -119,7 +139,7 @@ public class BoardServiceImpl implements BoardService {
                     .build();
             boardLists.add(dto);
         }
-        return boardLists;
+        return new BoardResponseList(boardLists);
     }
 
     @Transactional(readOnly = true)
