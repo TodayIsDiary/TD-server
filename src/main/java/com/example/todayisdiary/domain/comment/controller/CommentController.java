@@ -16,42 +16,48 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentService;
 
-    @Operation(description = "채팅 생성")
+    @Operation(description = "댓글 생성")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create/{board_id}")
-    public void createChat(@PathVariable(name = "board_id") Long id, @RequestBody CommentRequest request){
+    public void createChat(@PathVariable(name = "board_id") Long id, @RequestBody CommentRequest request) {
         commentService.createChat(request, id);
     }
 
     @Operation(description = "답글 생성")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/reply/create/{chat_id}")
-    public void createReplyChat(@PathVariable(name = "chat_id") Long id, @RequestBody CommentRequest request){
+    public void createReplyChat(@PathVariable(name = "chat_id") Long id, @RequestBody CommentRequest request) {
         commentService.createReplyChat(request, id);
     }
 
-    @Operation(description = "채팅 수정")
+    @Operation(description = "댓글 수정")
     @PatchMapping("/modify/{comment_id}")
-    public void setChat(@PathVariable(name = "comment_id") Long id, @RequestBody CommentRequest request){
+    public void setChat(@PathVariable(name = "comment_id") Long id, @RequestBody CommentRequest request) {
         commentService.setChat(request, id);
     }
 
-    @Operation(description = "채팅 삭제")
+    @Operation(description = "댓글 삭제")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/delete/{comment_id}")
-    public void delChat(@PathVariable(name = "comment_id") Long id){
+    public void delChat(@PathVariable(name = "comment_id") Long id) {
         commentService.deleteChat(id);
     }
 
-    @Operation(description = "채팅 보기")
+    @Operation(description = "댓글 보기")
     @GetMapping("/list/{board_id}")
-    public CommentResponseList chatLists(@PathVariable(name = "board_id") Long id){
+    public CommentResponseList chatLists(@PathVariable(name = "board_id") Long id) {
         return commentService.chatList(id);
     }
 
     @Operation(description = "답글 보기")
-    @GetMapping("/list/reply/   {comment_id}")
-    public CommentResponseList chatReplyLists(@PathVariable(name = "comment_id") Long id){
+    @GetMapping("/list/reply/{comment_id}")
+    public CommentResponseList chatReplyLists(@PathVariable(name = "comment_id") Long id) {
         return commentService.chatReplyList(id);
+    }
+
+    @Operation(description = "인기 많은 댓글 보기")
+    @GetMapping("/list/heart/{board_id}")
+    public CommentResponseList chatHeartList(@PathVariable(name = "board_id") Long id) {
+        return commentService.chatHeartList(id);
     }
 }
