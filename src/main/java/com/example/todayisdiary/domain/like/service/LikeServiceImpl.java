@@ -29,8 +29,6 @@ public class LikeServiceImpl implements LikeService {
         User user = userFacade.getCurrentUser();
         Board board = boardFacade.getBoardById(diaryId);
 
-        board.likes();
-
         BoardLove boardLike = BoardLove.builder()
                 .user(user)
                 .board(board).build();
@@ -49,7 +47,6 @@ public class LikeServiceImpl implements LikeService {
 
         for (BoardLove boardLike : like) {
             if (boardLike.getUser().equals(user)) {
-                board.unlikes();
 
                 board.deleteHeart();
                 boardRepository.save(board);
