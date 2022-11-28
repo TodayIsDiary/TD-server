@@ -8,6 +8,8 @@ import com.example.todayisdiary.domain.comment.facade.CommentFacade;
 import com.example.todayisdiary.domain.comment.repository.CommentRepository;
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.board.facade.BoardFacade;
+import com.example.todayisdiary.domain.like.entity.BoardLove;
+import com.example.todayisdiary.domain.like.entity.CommentLove;
 import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
@@ -93,7 +95,7 @@ public class CommentServiceImpl implements CommentService {
 
         if (comment.isOriginChat()) {
             commentRepository.delete(comment);
-            List<Comment> comments = commentFacade.getChatByIdList(id);
+            List<Comment> comments = commentFacade.getChatByOriginId(id);
             commentRepository.deleteAll(comments);
         } else commentRepository.delete(comment);
     }
@@ -114,7 +116,7 @@ public class CommentServiceImpl implements CommentService {
                             .writer(comment.getWriter())
                             .date(dateService.betweenDate(comment.getChatTime()))
                             .heart(comment.getHeart())
-                            .isLiked(comment.isLiked())
+                            .isLiked(writerLike(comment))
                             .originChatId(comment.getOriginChatId())
                             .replyChatId(comment.getReplyChatId()).build();
                     commentLists.add(dto);
@@ -140,7 +142,7 @@ public class CommentServiceImpl implements CommentService {
                         .date(dateService.betweenDate(c.getChatTime()))
                         .originChatId(c.getOriginChatId())
                         .heart(c.getHeart())
-                        .isLiked(c.isLiked())
+                        .isLiked(writerLike(c))
                         .replyChatId(c.getReplyChatId()).build();
                 commentLists.add(dto);
             }
@@ -165,7 +167,7 @@ public class CommentServiceImpl implements CommentService {
                         .date(dateService.betweenDate(c.getChatTime()))
                         .originChatId(c.getOriginChatId())
                         .heart(c.getHeart())
-                        .isLiked(c.isLiked())
+                        .isLiked(writerLike(c))
                         .replyChatId(c.getReplyChatId()).build();
                 commentLists.add(dto);
             }
@@ -178,6 +180,18 @@ public class CommentServiceImpl implements CommentService {
         if (comment.getWriter().equals(user.getNickName()) || user.getRole() == Role.ADMIN) {
             log.info("권한이 성공하였습니다.");
         } else throw new IllegalStateException("작성한 댓글이 아닙니다.");
+    }
+
+    private boolean writerLike(Comment comment){
+        User user = userFacade.getCurrentUser();
+        List<CommentLove> commentLoves = comment.getCommentLoves();
+
+        for(CommentLove commentLove : commentLoves){
+            if(commentLove.getUser().getAccountId().equals(user.getAccountId())){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
