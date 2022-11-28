@@ -1,6 +1,5 @@
 package com.example.todayisdiary.domain.board.service;
 
-import com.example.todayisdiary.domain.board.dto.BoardList;
 import com.example.todayisdiary.domain.board.dto.BoardRequest;
 import com.example.todayisdiary.domain.board.dto.BoardResponse;
 import com.example.todayisdiary.domain.board.dto.BoardResponseList;

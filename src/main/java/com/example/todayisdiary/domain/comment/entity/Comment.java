@@ -1,7 +1,6 @@
 package com.example.todayisdiary.domain.comment.entity;
 
 import com.example.todayisdiary.domain.board.entity.Board;
-import com.example.todayisdiary.domain.like.entity.BoardLove;
 import com.example.todayisdiary.domain.like.entity.CommentLove;
 import com.example.todayisdiary.domain.user.entity.User;
 import lombok.AccessLevel;
@@ -24,7 +23,7 @@ public class Comment {
 
     private String writer;
 
-    private String comment;
+    private String comments;
 
     private Long originChatId;
 
@@ -71,9 +70,9 @@ public class Comment {
     }
 
     @Builder
-    public Comment(String writer, String comment, User user, Board board, Long originChatId, Long replyChatId) {
+    public Comment(String writer, String comments, User user, Board board, Long originChatId, Long replyChatId) {
         this.writer = writer;
-        this.comment = comment;
+        this.comments = comments;
         this.user = user;
         this.board = board;
         this.originChatId = originChatId;
@@ -81,7 +80,7 @@ public class Comment {
     }
 
     public void setChat(String comment){
-        this.comment = comment;
+        this.comments = comment;
     }
 
     public void addHeart(){

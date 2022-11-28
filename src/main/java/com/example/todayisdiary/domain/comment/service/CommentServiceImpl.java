@@ -38,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
         Board board = boardFacade.getBoardById(id);
 
         Comment comment = Comment.builder()
-                .comment(request.getComment())
+                .comments(request.getComment())
                 .writer(user.getNickName())
                 .user(user)
                 .board(board)
@@ -56,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
 
         if (comment.isOriginChat()) {
             Comment comments = Comment.builder()
-                    .comment(request.getComment())
+                    .comments(request.getComment())
                     .writer(user.getNickName())
                     .user(user)
                     .board(comment.getBoard())
@@ -65,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
             commentRepository.save(comments);
         } else {
             Comment comments = Comment.builder()
-                    .comment(request.getComment())
+                    .comments(request.getComment())
                     .writer(user.getNickName())
                     .user(user)
                     .board(comment.getBoard())
@@ -110,7 +110,7 @@ public class CommentServiceImpl implements CommentService {
             if (board.getId().equals(comment.getBoard().getId()) && comment.isOriginChat()) {
                     CommentList dto = CommentList.builder()
                             .id(comment.getId())
-                            .comment(comment.getComment())
+                            .comment(comment.getComments())
                             .writer(comment.getWriter())
                             .date(dateService.betweenDate(comment.getChatTime()))
                             .heart(comment.getHeart())
@@ -135,7 +135,7 @@ public class CommentServiceImpl implements CommentService {
             if (comment.getId().equals(c.getOriginChatId())) {
                 CommentList dto = CommentList.builder()
                         .id(c.getId())
-                        .comment(c.getComment())
+                        .comment(c.getComments())
                         .writer(c.getWriter())
                         .date(dateService.betweenDate(c.getChatTime()))
                         .originChatId(c.getOriginChatId())
@@ -160,7 +160,7 @@ public class CommentServiceImpl implements CommentService {
             if (board.getId().equals(c.getBoard().getId()) && c.isOriginChat()) {
                 CommentList dto = CommentList.builder()
                         .id(c.getId())
-                        .comment(c.getComment())
+                        .comment(c.getComments())
                         .writer(c.getWriter())
                         .date(dateService.betweenDate(c.getChatTime()))
                         .originChatId(c.getOriginChatId())
