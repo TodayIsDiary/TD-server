@@ -33,10 +33,9 @@ public class Board {
     // 업데이트와 만들어진 시간
     private LocalDateTime boardTime;
 
-    @ColumnDefault("false")
-    private boolean isLiked;
-
     private int heart;
+
+    private int view;
 
     @PrePersist
     public void prePersist(){
@@ -56,14 +55,6 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
-    public void likes(){
-        this.isLiked = true;
-    }
-
-    public void unlikes(){
-        this.isLiked = false;
-    }
-
     @Builder
     public Board(String title, String content, BoardCategory category,User user){
         this.title = title;
@@ -77,6 +68,8 @@ public class Board {
         this.content = content;
         this.category = category;
     }
+
+    public void addView(){this.view += 1;}
 
     public void addHeart(){
         this.heart += 1;
