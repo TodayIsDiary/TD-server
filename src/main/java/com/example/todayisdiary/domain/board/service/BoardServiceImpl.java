@@ -8,6 +8,7 @@ import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.board.enums.BoardCategory;
 import com.example.todayisdiary.domain.board.facade.BoardFacade;
 import com.example.todayisdiary.domain.board.repository.BoardRepository;
+import com.example.todayisdiary.domain.like.entity.BoardLove;
 import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
@@ -76,6 +77,8 @@ public class BoardServiceImpl implements BoardService {
                     .title(board.getTitle())
                     .category(board.getCategory())
                     .date(dateService.betweenDate(board.getBoardTime()))
+                    .view(board.getView())
+                    .commentCount(board.getComments().size())
                     .build();
             boardLists.add(dto);
         }
@@ -96,6 +99,8 @@ public class BoardServiceImpl implements BoardService {
                         .title(board.getTitle())
                         .category(board.getCategory())
                         .date(dateService.betweenDate(board.getBoardTime()))
+                        .view(board.getView())
+                        .commentCount(board.getComments().size())
                         .build();
                 boardLists.add(dto);
             }
@@ -116,6 +121,8 @@ public class BoardServiceImpl implements BoardService {
                     .title(board.getTitle())
                     .category(board.getCategory())
                     .date(dateService.betweenDate(board.getBoardTime()))
+                    .view(board.getView())
+                    .commentCount(board.getComments().size())
                     .build();
             boardLists.add(dto);
         }
@@ -136,16 +143,21 @@ public class BoardServiceImpl implements BoardService {
                     .title(board.getTitle())
                     .category(board.getCategory())
                     .date(dateService.betweenDate(board.getBoardTime()))
+                    .view(board.getView())
+                    .commentCount(board.getComments().size())
                     .build();
             boardLists.add(dto);
         }
         return new BoardResponseList(boardLists);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public BoardResponse boardDetail(Long id) {
         Board board = boardFacade.getBoardById(id);
+        board.addView();
+
+        boardRepository.save(board);
         return BoardResponse.builder()
                 .boardId(board.getId())
                 .title(board.getTitle())
@@ -153,12 +165,25 @@ public class BoardServiceImpl implements BoardService {
                 .category(board.getCategory())
                 .boardTime(dateService.betweenDate(board.getBoardTime()))
                 .writer(board.getUser().getNickName())
-                .isLiked(board.isLiked())
+                .isLiked(writerLike(board))
+                .commentCount(board.getComments().size())
                 .heart(board.getHeart()).build();
     }
 
     private void userMatch(Board board) {
         if (board.getUser().getAccountId().equals(userFacade.getCurrentUser().getAccountId()) || userFacade.getCurrentUser().getRole() == Role.ADMIN) {
         } else throw new IllegalStateException("권한이 없습니다.");
+    }
+
+    private boolean writerLike(Board board){
+        User user = userFacade.getCurrentUser();
+        List<BoardLove> boardLoves = board.getBoardLoves();
+
+        for(BoardLove boardLove : boardLoves){
+            if(boardLove.getUser().getAccountId().equals(user.getAccountId())){
+                return true;
+            }
+        }
+        return false;
     }
 }
