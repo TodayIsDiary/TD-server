@@ -48,7 +48,7 @@ public class Board {
     private User user;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
-    private List<BoardLove> likes;
+    private List<BoardLove> boardLoves;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Report> reports;
