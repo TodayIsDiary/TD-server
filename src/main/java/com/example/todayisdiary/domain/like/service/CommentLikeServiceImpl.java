@@ -27,8 +27,6 @@ public class CommentLikeServiceImpl implements CommentLikeService{
         User user = userFacade.getCurrentUser();
         Comment comment = commentFacade.getChatById(commentId);
 
-        comment.likes();
-
         CommentLove commentLove = CommentLove.builder()
                 .user(user)
                 .comment(comment).build();
@@ -48,7 +46,6 @@ public class CommentLikeServiceImpl implements CommentLikeService{
 
         for(CommentLove c : like){
             if(c.getUser().equals(user)){
-                comment.unlikes();
 
                 comment.deleteHeart();
                 commentRepository.save(comment);
