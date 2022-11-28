@@ -15,4 +15,6 @@ public interface CommentService {
     CommentResponseList chatList(Long id);
 
     CommentResponseList chatReplyList(Long id);
+
+    CommentResponseList chatHeartList(Long id);
 }
