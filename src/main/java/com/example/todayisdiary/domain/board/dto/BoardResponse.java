@@ -23,4 +23,6 @@ public class BoardResponse {
 
     private boolean isLiked;
 
+    private int commentCount;
+
 }
