@@ -45,7 +45,7 @@ public class LikeServiceImpl implements LikeService {
 
         User user = userFacade.getCurrentUser();
         Board board = boardFacade.getBoardById(diaryId);
-        List<BoardLove> like = board.getLikes();
+        List<BoardLove> like = board.getBoardLoves();
 
         for (BoardLove boardLike : like) {
             if (boardLike.getUser().equals(user)) {
