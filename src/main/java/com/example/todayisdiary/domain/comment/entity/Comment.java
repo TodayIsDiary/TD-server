@@ -37,10 +37,6 @@ public class Comment {
     @ColumnDefault("false")
     private boolean originChat;
 
-    @ColumnDefault("false")
-    private boolean isLiked;
-
-
     @PrePersist
     public void prePersist(){
         this.chatTime = LocalDateTime.now();
@@ -59,14 +55,6 @@ public class Comment {
 
     public void isOrigin(){
         this.originChat = true;
-    }
-
-    public void likes(){
-        this.isLiked = true;
-    }
-
-    public void unlikes(){
-        this.isLiked = false;
     }
 
     @Builder
