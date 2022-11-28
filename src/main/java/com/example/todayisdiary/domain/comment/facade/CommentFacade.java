@@ -18,8 +18,8 @@ public class CommentFacade {
                 .orElseThrow(() -> new IllegalArgumentException("채팅을 찾지 못하였습니다."));
     }
 
-    public List<Comment> getChatByIdList(Long id) {
-        return commentRepository.findAllById(id);
+    public List<Comment> getChatByOriginId(Long id) {
+        return commentRepository.findCommentByOriginChatId(id);
     }
 
     public List<Comment> getChatAllById(Sort sort) {
