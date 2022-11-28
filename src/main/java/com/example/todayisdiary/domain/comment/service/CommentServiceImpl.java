@@ -113,6 +113,8 @@ public class CommentServiceImpl implements CommentService {
                             .comment(comment.getComment())
                             .writer(comment.getWriter())
                             .date(dateService.betweenDate(comment.getChatTime()))
+                            .heart(comment.getHeart())
+                            .isLiked(comment.isLiked())
                             .originChatId(comment.getOriginChatId())
                             .replyChatId(comment.getReplyChatId()).build();
                     commentLists.add(dto);
@@ -137,7 +139,34 @@ public class CommentServiceImpl implements CommentService {
                         .writer(c.getWriter())
                         .date(dateService.betweenDate(c.getChatTime()))
                         .originChatId(c.getOriginChatId())
-                        .replyChatId(c  .getReplyChatId()).build();
+                        .heart(c.getHeart())
+                        .isLiked(c.isLiked())
+                        .replyChatId(c.getReplyChatId()).build();
+                commentLists.add(dto);
+            }
+        }
+        return new CommentResponseList(commentLists);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CommentResponseList chatHeartList(Long id) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "heart");
+        Board board = boardFacade.getBoardById(id);
+        List<Comment> comments = commentFacade.getChatAllById(sort);
+        List<CommentList> commentLists = new ArrayList<>();
+
+        for (Comment c : comments) {
+            if (board.getId().equals(c.getBoard().getId()) && c.isOriginChat()) {
+                CommentList dto = CommentList.builder()
+                        .id(c.getId())
+                        .comment(c.getComment())
+                        .writer(c.getWriter())
+                        .date(dateService.betweenDate(c.getChatTime()))
+                        .originChatId(c.getOriginChatId())
+                        .heart(c.getHeart())
+                        .isLiked(c.isLiked())
+                        .replyChatId(c.getReplyChatId()).build();
                 commentLists.add(dto);
             }
         }
