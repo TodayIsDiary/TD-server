@@ -11,5 +11,7 @@ public class CommentList {
     private final String writer;
     private final String date;
     private final Long originChatId;
+    private final int heart;
+    private final boolean isLiked;
     private final Long replyChatId;
 }
