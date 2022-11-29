@@ -118,7 +118,8 @@ public class CommentServiceImpl implements CommentService {
                             .heart(comment.getHeart())
                             .isLiked(writerLike(comment))
                             .originChatId(comment.getOriginChatId())
-                            .replyChatId(comment.getReplyChatId()).build();
+                            .replyChatId(comment.getReplyChatId())
+                            .userId(comment.getUser().getId()).build();
                     commentLists.add(dto);
             }
         }
@@ -143,7 +144,8 @@ public class CommentServiceImpl implements CommentService {
                         .originChatId(c.getOriginChatId())
                         .heart(c.getHeart())
                         .isLiked(writerLike(c))
-                        .replyChatId(c.getReplyChatId()).build();
+                        .replyChatId(c.getReplyChatId())
+                        .userId(c.getUser().getId()).build();
                 commentLists.add(dto);
             }
         }
@@ -168,7 +170,8 @@ public class CommentServiceImpl implements CommentService {
                         .originChatId(c.getOriginChatId())
                         .heart(c.getHeart())
                         .isLiked(writerLike(c))
-                        .replyChatId(c.getReplyChatId()).build();
+                        .replyChatId(c.getReplyChatId())
+                        .userId(c.getUser().getId()).build();
                 commentLists.add(dto);
             }
         }
