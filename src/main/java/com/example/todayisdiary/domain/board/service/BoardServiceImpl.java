@@ -167,7 +167,8 @@ public class BoardServiceImpl implements BoardService {
                 .writer(board.getUser().getNickName())
                 .isLiked(writerLike(board))
                 .commentCount(board.getComments().size())
-                .heart(board.getHeart()).build();
+                .heart(board.getHeart())
+                .userId(board.getUser().getId()).build();
     }
 
     private void userMatch(Board board) {
