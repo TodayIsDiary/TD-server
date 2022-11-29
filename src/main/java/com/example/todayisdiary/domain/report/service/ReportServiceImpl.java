@@ -77,8 +77,8 @@ public class ReportServiceImpl implements ReportService {
     @Transactional
     public void delCommentReport(Long id) {
         adminAccount();
-        Report report = reportFacade.getReportById(id);
-        reportRepository.delete(report);
+        CommentReport commentReport = reportFacade.getCommentReportById(id);
+        commentReportRepository.delete(commentReport);
     }
 
     @Override
