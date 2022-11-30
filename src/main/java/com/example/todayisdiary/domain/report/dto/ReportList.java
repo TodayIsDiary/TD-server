@@ -9,5 +9,4 @@ public class ReportList {
     private Long reportId;
     private String reporter;
     private String title;
-    private Long boardId;
 }
