@@ -60,18 +60,21 @@ public class ReportController {
     }
 
     @Operation(description = "허위 댓글 신고 삭제하기")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/del/{comment_id}")
     public void reportCommentDel(@PathVariable(name = "comment_id") Long id){
         reportService.delCommentReport(id);
     }
 
     @Operation(description = "부적절한 일기 삭제하기")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/del/board/{board_id}")
     public void boardDel(@PathVariable(name = "board_id") Long id){
         reportService.forceDelBoard(id);
     }
 
     @Operation(description = "부적절한 댓글 삭제하기")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/del/comment/{comment_id}")
     public void commentDel(@PathVariable(name = "comment_id") Long id){
         reportService.forceDelComment(id);
