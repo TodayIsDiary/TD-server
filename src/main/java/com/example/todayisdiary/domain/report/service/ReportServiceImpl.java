@@ -93,7 +93,6 @@ public class ReportServiceImpl implements ReportService {
             ReportList dto = ReportList.builder()
                     .reportId(report.getId())
                     .title(report.getTitle())
-                    .boardId(report.getBoard().getId())
                     .reporter(report.getUser().getNickName()).build();
             reportLists.add(dto);
         }
@@ -112,7 +111,6 @@ public class ReportServiceImpl implements ReportService {
             CommentReportList dto = CommentReportList.builder()
                     .reportId(report.getId())
                     .title(report.getTitle())
-                    .commentId(report.getComment().getId())
                     .reporter(report.getUser().getNickName()).build();
             reportLists.add(dto);
         }
@@ -131,7 +129,8 @@ public class ReportServiceImpl implements ReportService {
                 .title(report.getTitle())
                 .content(report.getContent())
                 .boardTitle(report.getBoard().getTitle())
-                .boardContent(report.getBoard().getContent()).build();
+                .boardContent(report.getBoard().getContent())
+                .boardId(report.getBoard().getId()).build();
     }
 
     @Override
@@ -145,7 +144,8 @@ public class ReportServiceImpl implements ReportService {
                 .reporter(report.getUser().getNickName())
                 .title(report.getTitle())
                 .content(report.getContent())
-                .comment(report.getComment().getComments()).build();
+                .comment(report.getComment().getComments())
+                .commentId(report.getComment().getId()).build();
     }
 
     @Override
