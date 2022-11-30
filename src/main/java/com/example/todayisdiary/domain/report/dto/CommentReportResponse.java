@@ -11,4 +11,5 @@ public class CommentReportResponse {
     private String title;
     private String content;
     private String comment;
+    private Long commentId;
 }
