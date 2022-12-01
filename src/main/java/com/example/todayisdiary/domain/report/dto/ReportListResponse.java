@@ -7,6 +7,6 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class ResponseBoardList {
+public class BoardListResponse {
     private final List<ReportList> list;
 }
