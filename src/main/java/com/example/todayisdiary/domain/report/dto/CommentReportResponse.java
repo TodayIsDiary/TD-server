@@ -5,8 +5,12 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ReportList {
+public class CommentReportResponse {
     private Long reportId;
     private String reporter;
     private String title;
+    private String content;
+    private String comment;
+    private Long commentId;
+    private String accountId;
 }

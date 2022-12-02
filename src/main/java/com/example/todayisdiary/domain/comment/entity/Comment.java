@@ -2,6 +2,7 @@ package com.example.todayisdiary.domain.comment.entity;
 
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.like.entity.CommentLove;
+import com.example.todayisdiary.domain.report.entity.CommentReport;
 import com.example.todayisdiary.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -52,6 +53,9 @@ public class Comment {
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<CommentLove> commentLoves;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+    private List<CommentReport> commentReports;
 
     public void isOrigin(){
         this.originChat = true;

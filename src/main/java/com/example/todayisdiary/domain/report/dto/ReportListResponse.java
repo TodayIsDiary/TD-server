@@ -3,9 +3,10 @@ package com.example.todayisdiary.domain.report.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
-public class ReportRequest {
-    private String title;
-    private String content;
+public class ReportListResponse {
+    private final List<ReportList> list;
 }

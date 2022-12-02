@@ -1,7 +1,6 @@
 package com.example.todayisdiary.domain.user.controller;
 
 import com.example.todayisdiary.domain.user.dto.*;
-import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.service.UserService;
 import com.example.todayisdiary.global.mail.dto.MailRequest;
 import com.example.todayisdiary.global.security.auth.AuthDetails;
@@ -71,7 +70,7 @@ public class UserController {
     public UserInfoResponse getUser(){ return userService.getUser();}
 
     @Operation(summary = "내 정보 수정하기")
-    @PatchMapping("/change")
+    @PatchMapping("/modify")
     public void setUser(@RequestBody UserRequest request)
     {
         userService.setUser(request);

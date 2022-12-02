@@ -17,6 +17,12 @@ public class UserFacade {
         return getUserByAccountId(accountId);
     }
 
+    public User getUserById(Long id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+
+    }
+
     public User getUserByAccountId(String accountId) {
         return userRepository.findUserByAccountId(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));

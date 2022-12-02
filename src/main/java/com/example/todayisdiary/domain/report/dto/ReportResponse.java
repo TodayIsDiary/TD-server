@@ -12,4 +12,6 @@ public class ReportResponse {
     private String content;
     private String boardTitle;
     private String boardContent;
+    private Long boardId;
+    private String accountId;
 }

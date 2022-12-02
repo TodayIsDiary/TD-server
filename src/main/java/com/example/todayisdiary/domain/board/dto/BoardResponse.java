@@ -7,22 +7,23 @@ import lombok.Getter;
 @Getter
 @Builder
 public class BoardResponse {
-    private Long boardId;
+    private final Long boardId;
 
-    private String title;
+    private final String title;
 
-    private String content;
+    private final String content;
 
-    private BoardCategory category;
+    private final BoardCategory category;
 
-    private String boardTime;
+    private final String boardTime;
 
-    private String writer;
+    private final String writer;
 
-    private int heart;
+    private final int heart;
 
-    private boolean isLiked;
+    private final boolean isLiked;
 
-    private int commentCount;
+    private final int commentCount;
 
+    private final Long userId;
 }

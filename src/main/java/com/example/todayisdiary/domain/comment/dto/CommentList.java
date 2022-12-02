@@ -14,4 +14,5 @@ public class CommentList {
     private final int heart;
     private final boolean isLiked;
     private final Long replyChatId;
+    private final Long userId;
 }

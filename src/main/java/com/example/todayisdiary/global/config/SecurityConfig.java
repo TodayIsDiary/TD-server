@@ -1,5 +1,6 @@
 package com.example.todayisdiary.global.config;
 
+import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.global.security.filter.JwtAuthenticationFilter;
 import com.example.todayisdiary.global.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,9 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/user/lost/password").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/user/lost/password").permitAll()
                 .antMatchers(HttpMethod.POST, "/user/email").permitAll()
+                .antMatchers(HttpMethod.GET,"/report/list/**").hasRole(Role.ROLE_ADMIN.getKey())
+                .antMatchers(HttpMethod.GET, "/report/detail/**").hasRole(Role.ROLE_ADMIN.getKey())
+                .antMatchers(HttpMethod.DELETE, "/report/del/**").hasRole(Role.ROLE_ADMIN.getKey())
 
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/v3/api-docs/**").permitAll()

@@ -18,8 +18,8 @@ public class CommentController {
 
     @Operation(description = "댓글 생성")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/create/{board_id}")
-    public void createChat(@PathVariable(name = "board_id") Long id, @RequestBody CommentRequest request) {
+    @PostMapping("/create/{diary_id}")
+    public void createChat(@PathVariable(name = "diary_id") Long id, @RequestBody CommentRequest request) {
         commentService.createChat(request, id);
     }
 
@@ -44,8 +44,8 @@ public class CommentController {
     }
 
     @Operation(description = "댓글 보기")
-    @GetMapping("/list/{board_id}")
-    public CommentResponseList chatLists(@PathVariable(name = "board_id") Long id) {
+    @GetMapping("/list/{diary_id}")
+    public CommentResponseList chatLists(@PathVariable(name = "diary_id") Long id) {
         return commentService.chatList(id);
     }
 
@@ -56,8 +56,8 @@ public class CommentController {
     }
 
     @Operation(description = "인기 많은 댓글 보기")
-    @GetMapping("/list/heart/{board_id}")
-    public CommentResponseList chatHeartList(@PathVariable(name = "board_id") Long id) {
+    @GetMapping("/list/heart/{diary_id}")
+    public CommentResponseList chatHeartList(@PathVariable(name = "diary_id") Long id) {
         return commentService.chatHeartList(id);
     }
 }

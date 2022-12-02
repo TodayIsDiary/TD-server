@@ -167,11 +167,12 @@ public class BoardServiceImpl implements BoardService {
                 .writer(board.getUser().getNickName())
                 .isLiked(writerLike(board))
                 .commentCount(board.getComments().size())
-                .heart(board.getHeart()).build();
+                .heart(board.getHeart())
+                .userId(board.getUser().getId()).build();
     }
 
     private void userMatch(Board board) {
-        if (board.getUser().getAccountId().equals(userFacade.getCurrentUser().getAccountId()) || userFacade.getCurrentUser().getRole() == Role.ADMIN) {
+        if (board.getUser().getAccountId().equals(userFacade.getCurrentUser().getAccountId()) || userFacade.getCurrentUser().getRole() == Role.ROLE_ADMIN) {
         } else throw new IllegalStateException("권한이 없습니다.");
     }
 
