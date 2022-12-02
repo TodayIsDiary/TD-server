@@ -1,4 +1,4 @@
-package com.example.todayisdiary.domain.report.dto;
+package com.example.todayisdiary.domain.report.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
