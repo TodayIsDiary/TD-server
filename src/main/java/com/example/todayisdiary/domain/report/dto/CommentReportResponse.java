@@ -12,4 +12,5 @@ public class CommentReportResponse {
     private String content;
     private String comment;
     private Long commentId;
+    private String accountId;
 }
