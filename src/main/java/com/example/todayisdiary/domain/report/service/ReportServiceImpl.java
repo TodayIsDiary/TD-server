@@ -7,14 +7,17 @@ import com.example.todayisdiary.domain.comment.entity.Comment;
 import com.example.todayisdiary.domain.comment.facade.CommentFacade;
 import com.example.todayisdiary.domain.comment.repository.CommentRepository;
 import com.example.todayisdiary.domain.report.dto.*;
+import com.example.todayisdiary.domain.report.dto.request.ReportRequest;
 import com.example.todayisdiary.domain.report.entity.CommentReport;
 import com.example.todayisdiary.domain.report.entity.Report;
+import com.example.todayisdiary.domain.report.entity.UserReport;
 import com.example.todayisdiary.domain.report.facade.ReportFacade;
 import com.example.todayisdiary.domain.report.repository.CommentReportRepository;
 import com.example.todayisdiary.domain.report.repository.ReportRepository;
+import com.example.todayisdiary.domain.report.repository.UserReportRepository;
 import com.example.todayisdiary.domain.user.entity.User;
-import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
+import com.example.todayisdiary.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,8 @@ public class ReportServiceImpl implements ReportService {
     private final CommentRepository commentRepository;
     private final CommentReportRepository commentReportRepository;
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
+    private final UserReportRepository userReportRepository;
 
     @Override
     @Transactional
@@ -67,8 +72,20 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     @Transactional
+    public void createUserReport(ReportRequest request, Long id){
+        User user = userFacade.getUserById(id);
+        User users = userFacade.getCurrentUser();
+
+        userReportRepository.save(UserReport.builder()
+                .title(request.getTitle())
+                .content(request.getContent())
+                .user(user)
+                .reporter(users.getNickName()).build());
+    }
+
+    @Override
+    @Transactional
     public void delReport(Long id) {
-        adminAccount();
         Report report = reportFacade.getReportById(id);
         reportRepository.delete(report);
     }
@@ -76,16 +93,21 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional
     public void delCommentReport(Long id) {
-        adminAccount();
         CommentReport commentReport = reportFacade.getCommentReportById(id);
         commentReportRepository.delete(commentReport);
     }
 
     @Override
+    @Transactional
+    public void delUserReport(Long id){
+        UserReport userReport = reportFacade.getUserReportById(id);
+        userReportRepository.delete(userReport);
+    }
+
+    @Override
     @Transactional(readOnly = true)
-    public ResponseBoardList reportBoardList() {
-        adminAccount();
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+    public ReportListResponse reportBoardList() {
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
         List<Report> reports = reportFacade.getBoardAllById(sort);
         List<ReportList> reportLists = new ArrayList<>();
 
@@ -96,31 +118,94 @@ public class ReportServiceImpl implements ReportService {
                     .reporter(report.getUser().getNickName()).build();
             reportLists.add(dto);
         }
-        return new ResponseBoardList(reportLists);
+        return new ReportListResponse(reportLists);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseCommentList reportCommentList() {
-        adminAccount();
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+    public ReportListResponse reportCommentList() {
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
         List<CommentReport> reports = reportFacade.getCommentAllById(sort);
-        List<CommentReportList> reportLists = new ArrayList<>();
+        List<ReportList> reportLists = new ArrayList<>();
 
         for (CommentReport report : reports) {
-            CommentReportList dto = CommentReportList.builder()
+            ReportList dto = ReportList.builder()
                     .reportId(report.getId())
                     .title(report.getTitle())
                     .reporter(report.getUser().getNickName()).build();
             reportLists.add(dto);
         }
-        return new ResponseCommentList(reportLists);
+        return new ReportListResponse(reportLists);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ReportListResponse userReportList(){
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
+        List<UserReport> reports = reportFacade.getUserAllById(sort);
+        List<ReportList> userReportLists = new ArrayList<>();
+
+        for(UserReport report : reports){
+            ReportList dto = ReportList.builder()
+                    .reportId(report.getId())
+                    .title(report.getTitle())
+                    .reporter(report.getUser().getNickName()).build();
+            userReportLists.add(dto);
+        }
+        return new ReportListResponse(userReportLists);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ReportListResponse reportBoardFilterList(String title){
+        List<Report> reports = reportFacade.getReportByTitle(title);
+        List<ReportList> reportLists = new ArrayList<>();
+
+        for (Report report : reports) {
+            ReportList dto = ReportList.builder()
+                    .reportId(report.getId())
+                    .title(report.getTitle())
+                    .reporter(report.getUser().getNickName()).build();
+            reportLists.add(dto);
+        }
+        return new ReportListResponse(reportLists);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ReportListResponse reportCommentFilterList(String title){
+        List<CommentReport> reports = reportFacade.getCommentReportByTitle(title);
+        List<ReportList> reportLists = new ArrayList<>();
+
+        for (CommentReport report : reports) {
+            ReportList dto = ReportList.builder()
+                    .reportId(report.getId())
+                    .title(report.getTitle())
+                    .reporter(report.getUser().getNickName()).build();
+            reportLists.add(dto);
+        }
+        return new ReportListResponse(reportLists);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ReportListResponse userReportFilterList(String title){
+        List<UserReport> reports = reportFacade.getUserReportByTitle(title);
+        List<ReportList> reportLists = new ArrayList<>();
+
+        for (UserReport report : reports) {
+            ReportList dto = ReportList.builder()
+                    .reportId(report.getId())
+                    .title(report.getTitle())
+                    .reporter(report.getUser().getNickName()).build();
+            reportLists.add(dto);
+        }
+        return new ReportListResponse(reportLists);
     }
 
     @Override
     @Transactional(readOnly = true)
     public ReportResponse detailReport(Long id) {
-        adminAccount();
         Report report = reportFacade.getReportById(id);
 
         return ReportResponse.builder()
@@ -130,13 +215,13 @@ public class ReportServiceImpl implements ReportService {
                 .content(report.getContent())
                 .boardTitle(report.getBoard().getTitle())
                 .boardContent(report.getBoard().getContent())
-                .boardId(report.getBoard().getId()).build();
+                .boardId(report.getBoard().getId())
+                .accountId(report.getUser().getAccountId()).build();
     }
 
     @Override
     @Transactional(readOnly = true)
     public CommentReportResponse detailCommentReport(Long id) {
-        adminAccount();
         CommentReport report = reportFacade.getCommentReportById(id);
 
         return CommentReportResponse.builder()
@@ -145,13 +230,30 @@ public class ReportServiceImpl implements ReportService {
                 .title(report.getTitle())
                 .content(report.getContent())
                 .comment(report.getComment().getComments())
-                .commentId(report.getComment().getId()).build();
+                .commentId(report.getComment().getId())
+                .accountId(report.getUser().getAccountId()).build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserReportResponse detailUserReport(Long id){
+        UserReport report = reportFacade.getUserReportById(id);
+
+        return UserReportResponse.builder()
+                .reportId(report.getId())
+                .reporter(report.getUser().getNickName())
+                .title(report.getTitle())
+                .content(report.getContent())
+                .userId(report.getUser().getId())
+                .accountId(report.getUser().getAccountId())
+                .introduce(report.getUser().getIntroduction())
+                .nickName(report.getUser().getNickName()).build();
+
     }
 
     @Override
     @Transactional
     public void forceDelBoard(Long id) {
-        adminAccount();
         Board board = boardFacade.getBoardById(id);
         boardRepository.delete(board);
     }
@@ -159,13 +261,15 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional
     public void forceDelComment(Long id) {
-        adminAccount();
         Comment comment = commentFacade.getChatById(id);
         commentRepository.delete(comment);
     }
 
-    private void adminAccount() {
-        if (userFacade.getCurrentUser().getRole() != Role.ADMIN) throw new IllegalStateException("어드민 계정이 아닙니다.");
+    @Override
+    @Transactional
+    public void forceDelUser(Long id){
+        User user = userFacade.getUserById(id);
+        userRepository.delete(user);
     }
 
 }
