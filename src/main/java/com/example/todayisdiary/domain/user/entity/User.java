@@ -5,6 +5,7 @@ import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.like.entity.BoardLove;
 import com.example.todayisdiary.domain.like.entity.CommentLove;
 import com.example.todayisdiary.domain.report.entity.Report;
+import com.example.todayisdiary.domain.report.entity.UserReport;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.enums.Sex;
 import com.example.todayisdiary.global.mail.entity.Mail;
@@ -70,6 +71,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<UserReport> userReports;
+
     @Builder
     public User(String accountId, String nickName, String email, String password, String introduction, Sex sex){
         this.accountId = accountId;
@@ -78,7 +82,7 @@ public class User {
         this.password = password;
         this.introduction = introduction;
         this.sex = sex;
-        this.role = Role.USER;
+        this.role = Role.ROLE_USER;
     }
 
     public void setUser(String nickName, String introduction){
