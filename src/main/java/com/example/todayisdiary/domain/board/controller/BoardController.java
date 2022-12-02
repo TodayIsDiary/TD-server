@@ -27,21 +27,21 @@ public class BoardController {
     }
 
     @Operation(description = "일기 상세보기")
-    @GetMapping("/detail/{diaryId}")
-    public BoardResponse boardDetail(@PathVariable(name = "diaryId") Long id){
+    @GetMapping("/detail/{diary_id}")
+    public BoardResponse boardDetail(@PathVariable(name = "diary_id") Long id){
         return boardService.boardDetail(id);
     }
 
     @Operation(description = "일기 수정하기")
-    @PutMapping("/modify/{diaryId}")
-    public void boardModify(@RequestBody BoardRequest request, @PathVariable(name = "diaryId") Long id){
+    @PutMapping("/modify/{diary_id}")
+    public void boardModify(@RequestBody BoardRequest request, @PathVariable(name = "diary_id") Long id){
         boardService.setBoard(request, id);
     }
 
     @Operation(description = "일기 삭제하기")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/delete/{diaryId}")
-    public void boardDelete(@PathVariable(name = "diaryId") Long id){
+    @DeleteMapping("/delete/{diary_id}")
+    public void boardDelete(@PathVariable(name = "diary_id") Long id){
         boardService.delBoard(id);
     }
 
