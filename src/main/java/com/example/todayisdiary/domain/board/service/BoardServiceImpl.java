@@ -172,7 +172,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private void userMatch(Board board) {
-        if (board.getUser().getAccountId().equals(userFacade.getCurrentUser().getAccountId()) || userFacade.getCurrentUser().getRole() == Role.ADMIN) {
+        if (board.getUser().getAccountId().equals(userFacade.getCurrentUser().getAccountId()) || userFacade.getCurrentUser().getRole() == Role.ROLE_ADMIN) {
         } else throw new IllegalStateException("권한이 없습니다.");
     }
 

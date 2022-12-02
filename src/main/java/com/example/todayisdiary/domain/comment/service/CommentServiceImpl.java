@@ -180,7 +180,7 @@ public class CommentServiceImpl implements CommentService {
 
     private void userMath(Comment comment) {
         User user = userFacade.getCurrentUser();
-        if (comment.getWriter().equals(user.getNickName()) || user.getRole() == Role.ADMIN) {
+        if (comment.getWriter().equals(user.getNickName()) || user.getRole() == Role.ROLE_ADMIN) {
             log.info("권한이 성공하였습니다.");
         } else throw new IllegalStateException("작성한 댓글이 아닙니다.");
     }
