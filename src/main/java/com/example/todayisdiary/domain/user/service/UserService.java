@@ -21,7 +21,9 @@ public interface UserService {
     void setPasswords(PasswordRequest request);
 
     // 내 정보 불러오기, GET, /user
-    UserInfoResponse getUser();
+    UserInfoResponse myUser();
+
+    UserInfoResponse getUser(Long id);
 
     // 마이페이지 수정, PATCH, /user/change , 수정 되는것 : nickName, introduction
     void setUser(UserRequest request);
