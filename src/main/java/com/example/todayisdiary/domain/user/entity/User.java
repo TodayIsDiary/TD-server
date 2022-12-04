@@ -39,6 +39,8 @@ public class User {
     @Length(min = 6, max = 30)
     private String email;
 
+    private int visit;
+
     @Length(max = 68)
     private String password;
 
@@ -83,6 +85,10 @@ public class User {
         this.introduction = introduction;
         this.sex = sex;
         this.role = Role.ROLE_USER;
+    }
+
+    public void addVisit(){
+        this.visit += 1;
     }
 
     public void setUser(String nickName, String introduction){
