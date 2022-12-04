@@ -67,7 +67,11 @@ public class UserController {
 
     @Operation(summary = "내 정보 불러오기")
     @GetMapping()
-    public UserInfoResponse getUser(){ return userService.getUser();}
+    public UserInfoResponse myPage(){ return userService.myUser();}
+
+    @Operation(summary = "다른 사람 정보 불러오기")
+    @GetMapping("/{user_id}")
+    public UserInfoResponse getUser(@PathVariable(name = "user_id")Long id){ return userService.getUser(id);}
 
     @Operation(summary = "내 정보 수정하기")
     @PatchMapping("/modify")
