@@ -111,11 +111,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserInfoResponse getUser() {
+    public UserInfoResponse myUser() {
         User user = userFacade.getCurrentUser();
-        return UserInfoResponse.builder()
-                .nickName(user.getNickName())
-                .introduction(user.getIntroduction()).build();
+        return myPage(user);
+    }
+
+    @Override
+    @Transactional()
+    public UserInfoResponse getUser(Long id){
+        User user = userFacade.getUserById(id);
+        user.addVisit();
+        return myPage(user);
     }
 
     @Override
@@ -143,5 +149,18 @@ public class UserServiceImpl implements UserService {
 
         mailService.signMailSend(mailDto);
 
+    }
+
+
+
+    private UserInfoResponse myPage(User user){
+        return UserInfoResponse.builder()
+                .nickName(user.getNickName())
+                .introduction(user.getIntroduction())
+                .comment(user.getComments().size())
+                .love(user.getBoardLoves().size() + user.getCommentLoves().size())
+                .visit(user.getVisit())
+                .sex(user.getSex())
+                .email(user.getEmail()).build();
     }
 }
