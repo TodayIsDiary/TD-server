@@ -151,8 +151,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
-
     private UserInfoResponse myPage(User user){
         return UserInfoResponse.builder()
                 .nickName(user.getNickName())
