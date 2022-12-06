@@ -134,21 +134,14 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardResponseList myPost() {
         User user = userFacade.getCurrentUser();
-        List<Board> boards = user.getBoards();
-        List<BoardList> boardLists = new ArrayList<>();
+        return boardUserList(user);
+    }
 
-        for (Board board : boards) {
-            BoardList dto = BoardList.builder()
-                    .boardId(board.getId())
-                    .title(board.getTitle())
-                    .category(board.getCategory())
-                    .date(dateService.betweenDate(board.getBoardTime()))
-                    .view(board.getView())
-                    .commentCount(board.getComments().size())
-                    .build();
-            boardLists.add(dto);
-        }
-        return new BoardResponseList(boardLists);
+    @Transactional(readOnly = true)
+    @Override
+    public BoardResponseList getPost(Long id){
+        User user = userFacade.getUserById(id);
+        return boardUserList(user);
     }
 
     @Transactional
@@ -187,4 +180,23 @@ public class BoardServiceImpl implements BoardService {
         }
         return false;
     }
+
+    private BoardResponseList boardUserList(User user){
+        List<Board> boards = user.getBoards();
+        List<BoardList> boardLists = new ArrayList<>();
+
+        for (Board board : boards) {
+            BoardList dto = BoardList.builder()
+                    .boardId(board.getId())
+                    .title(board.getTitle())
+                    .category(board.getCategory())
+                    .date(dateService.betweenDate(board.getBoardTime()))
+                    .view(board.getView())
+                    .commentCount(board.getComments().size())
+                    .build();
+            boardLists.add(dto);
+        }
+        return new BoardResponseList(boardLists);
+    }
+
 }
