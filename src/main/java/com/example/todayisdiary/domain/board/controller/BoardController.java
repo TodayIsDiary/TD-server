@@ -63,9 +63,13 @@ public class BoardController {
         return boardService.boardHeartList();
     }
 
-    @Operation(description = "자신의 쓸 일기 보기")
+    @Operation(description = "자신의 쓴 일기 보기")
     @GetMapping("/my")
     public BoardResponseList myBoard(){
         return boardService.myPost();
     }
+
+    @Operation(description = "남의 쓴 일기 보기")
+    @GetMapping("/{user_id}")
+    public BoardResponseList getUserBoard(@PathVariable(name = "user_id")Long id){return boardService.getPost(id);}
 }
