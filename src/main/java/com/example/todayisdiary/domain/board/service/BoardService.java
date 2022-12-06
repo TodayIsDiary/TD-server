@@ -20,5 +20,7 @@ public interface BoardService {
 
     BoardResponseList myPost();
 
+    BoardResponseList getPost(Long id);
+
     BoardResponse boardDetail(Long id);
 }
