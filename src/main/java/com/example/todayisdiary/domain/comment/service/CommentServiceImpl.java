@@ -8,12 +8,12 @@ import com.example.todayisdiary.domain.comment.facade.CommentFacade;
 import com.example.todayisdiary.domain.comment.repository.CommentRepository;
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.board.facade.BoardFacade;
-import com.example.todayisdiary.domain.like.entity.BoardLove;
 import com.example.todayisdiary.domain.like.entity.CommentLove;
 import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
 import com.example.todayisdiary.global.date.DateService;
+import com.example.todayisdiary.global.s3.facade.S3Facade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -28,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentFacade commentFacade;
+    private final S3Facade s3Facade;
     private final UserFacade userFacade;
     private final BoardFacade boardFacade;
     private final CommentRepository commentRepository;
@@ -45,7 +46,8 @@ public class CommentServiceImpl implements CommentService {
                 .user(user)
                 .board(board)
                 .originChatId(0L)
-                .replyChatId(0L).build();
+                .replyChatId(0L)
+                .imageUrl(user.getImageUrl()).build();
         comment.isOrigin();
         commentRepository.save(comment);
     }
@@ -63,7 +65,8 @@ public class CommentServiceImpl implements CommentService {
                     .user(user)
                     .board(comment.getBoard())
                     .originChatId(comment.getId())
-                    .replyChatId(comment.getId()).build();
+                    .replyChatId(comment.getId())
+                    .imageUrl(user.getImageUrl()).build();
             commentRepository.save(comments);
         } else {
             Comment comments = Comment.builder()
@@ -72,7 +75,8 @@ public class CommentServiceImpl implements CommentService {
                     .user(user)
                     .board(comment.getBoard())
                     .originChatId(comment.getOriginChatId())
-                    .replyChatId(comment.getId()).build();
+                    .replyChatId(comment.getId())
+                    .imageUrl(user.getImageUrl()).build();
             commentRepository.save(comments);
         }
     }
@@ -119,7 +123,8 @@ public class CommentServiceImpl implements CommentService {
                             .isLiked(writerLike(comment))
                             .originChatId(comment.getOriginChatId())
                             .replyChatId(comment.getReplyChatId())
-                            .userId(comment.getUser().getId()).build();
+                            .userId(comment.getUser().getId())
+                            .imageUrl(comment.getImageUrl()).build();
                     commentLists.add(dto);
             }
         }
@@ -145,7 +150,8 @@ public class CommentServiceImpl implements CommentService {
                         .heart(c.getHeart())
                         .isLiked(writerLike(c))
                         .replyChatId(c.getReplyChatId())
-                        .userId(c.getUser().getId()).build();
+                        .userId(c.getUser().getId())
+                        .imageUrl(c.getImageUrl()).build();
                 commentLists.add(dto);
             }
         }
@@ -171,7 +177,8 @@ public class CommentServiceImpl implements CommentService {
                         .heart(c.getHeart())
                         .isLiked(writerLike(c))
                         .replyChatId(c.getReplyChatId())
-                        .userId(c.getUser().getId()).build();
+                        .userId(c.getUser().getId())
+                        .imageUrl(c.getImageUrl()).build();
                 commentLists.add(dto);
             }
         }
