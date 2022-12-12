@@ -24,6 +24,8 @@ public class SignupRequest {
     // 메일 인증 코드
     private String code;
 
+    private String imageUrl;
+
     private Sex sex;
 
     private String introduction;
