@@ -55,6 +55,8 @@ public class User {
     @Length(min = 1, max = 30)
     private String introduction;
 
+    private String imageUrl;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Board> boards;
 
@@ -77,7 +79,7 @@ public class User {
     private List<UserReport> userReports;
 
     @Builder
-    public User(String accountId, String nickName, String email, String password, String introduction, Sex sex){
+    public User(String accountId, String nickName, String email, String password, String introduction, Sex sex, String imageUrl){
         this.accountId = accountId;
         this.nickName = nickName;
         this.email = email;
@@ -85,7 +87,10 @@ public class User {
         this.introduction = introduction;
         this.sex = sex;
         this.role = Role.ROLE_USER;
+        this.imageUrl = imageUrl;
     }
+
+    public void userProfileChange(String imageUrl){this.imageUrl = imageUrl;}
 
     public void addVisit(){
         this.visit += 1;
