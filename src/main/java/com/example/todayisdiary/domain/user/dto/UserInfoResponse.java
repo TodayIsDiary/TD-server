@@ -14,4 +14,5 @@ public class UserInfoResponse {
     private final int comment;
     private final Sex sex;
     private final String email;
+    private final String imagUrl;
 }
