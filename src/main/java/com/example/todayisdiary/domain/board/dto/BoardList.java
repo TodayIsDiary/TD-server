@@ -14,5 +14,6 @@ public class BoardList {
     private final int heart;
     private final int view;
     private final int commentCount;
+    private final String imageUrl;
 
 }
