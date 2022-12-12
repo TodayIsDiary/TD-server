@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardRequest {
     private String title;
-
     private String content;
-
     private BoardCategory category;
+    private String imageUrl;
 }
