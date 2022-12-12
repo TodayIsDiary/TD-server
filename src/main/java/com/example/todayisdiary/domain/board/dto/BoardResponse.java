@@ -26,4 +26,6 @@ public class BoardResponse {
     private final int commentCount;
 
     private final Long userId;
+
+    private final String imageUrl;
 }
