@@ -56,6 +56,18 @@ public class S3Upload {
         boardRepository.save(board);
     }
 
+    public void delUser(User user){
+        if(user.getImageUrl() != null){
+            amazonS3.deleteObject(bucket,user.getImageUrl());
+        }
+    }
+
+    public void delBoard(Board board){
+        if(board.getImageUrl() != null){
+            amazonS3.deleteObject(bucket,board.getImageUrl());
+        }
+    }
+
     public String getImageUrl(String s3FileName){
         return amazonS3.getUrl(bucket, s3FileName).toString();
     }
