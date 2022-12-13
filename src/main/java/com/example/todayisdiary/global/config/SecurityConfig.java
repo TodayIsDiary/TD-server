@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET,"/report/list/**").hasRole(Role.ROLE_ADMIN.getKey())
                 .antMatchers(HttpMethod.GET, "/report/detail/**").hasRole(Role.ROLE_ADMIN.getKey())
                 .antMatchers(HttpMethod.DELETE, "/report/del/**").hasRole(Role.ROLE_ADMIN.getKey())
+                .antMatchers(HttpMethod.POST, "/image/sign/user").permitAll()
 
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/v3/api-docs/**").permitAll()

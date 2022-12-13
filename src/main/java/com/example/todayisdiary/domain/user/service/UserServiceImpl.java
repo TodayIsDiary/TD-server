@@ -8,6 +8,7 @@ import com.example.todayisdiary.global.mail.dto.MailRequest;
 import com.example.todayisdiary.global.mail.entity.Mail;
 import com.example.todayisdiary.global.mail.repository.MailRepository;
 import com.example.todayisdiary.global.mail.service.MailService;
+import com.example.todayisdiary.global.s3.facade.S3Facade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserFacade userFacade;
+    private final S3Facade s3Facade;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
@@ -44,7 +46,8 @@ public class UserServiceImpl implements UserService {
                 .email(request.getEmail())
                 .sex(request.getSex())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .introduction(request.getIntroduction()).build();
+                .introduction(request.getIntroduction())
+                .imageUrl(request.getImageUrl()).build();
 
         userRepository.save(user);
         mailRepository.delete(mail);
@@ -140,6 +143,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userFacade.getCurrentUser();
 
+        s3Facade.delUser(user);
         userRepository.delete(user);
     }
 
@@ -159,6 +163,7 @@ public class UserServiceImpl implements UserService {
                 .love(user.getBoardLoves().size() + user.getCommentLoves().size())
                 .visit(user.getVisit())
                 .sex(user.getSex())
-                .email(user.getEmail()).build();
+                .email(user.getEmail())
+                .imagUrl(s3Facade.getUrl(user.getImageUrl())).build();
     }
 }

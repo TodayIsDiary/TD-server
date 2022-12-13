@@ -13,6 +13,7 @@ import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
 import com.example.todayisdiary.global.date.DateService;
+import com.example.todayisdiary.global.s3.facade.S3Facade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final UserFacade userFacade;
     private final BoardFacade boardFacade;
+    private final S3Facade s3Facade;
     private final DateService dateService;
 
     @Transactional
@@ -39,7 +41,8 @@ public class BoardServiceImpl implements BoardService {
                 boardRequest.getTitle(),
                 boardRequest.getContent(),
                 boardRequest.getCategory(),
-                user
+                user,
+                boardRequest.getImageUrl()
         );
 
         boardRepository.save(board);
@@ -60,6 +63,7 @@ public class BoardServiceImpl implements BoardService {
     public void delBoard(Long id) {
         Board board = boardFacade.getBoardById(id);
         userMatch(board);
+        s3Facade.delBoard(board);
 
         boardRepository.delete(board);
     }
@@ -79,6 +83,7 @@ public class BoardServiceImpl implements BoardService {
                     .date(dateService.betweenDate(board.getBoardTime()))
                     .view(board.getView())
                     .commentCount(board.getComments().size())
+                    .imageUrl(s3Facade.getUrl(board.getImageUrl()))
                     .build();
             boardLists.add(dto);
         }
@@ -101,6 +106,7 @@ public class BoardServiceImpl implements BoardService {
                         .date(dateService.betweenDate(board.getBoardTime()))
                         .view(board.getView())
                         .commentCount(board.getComments().size())
+                        .imageUrl(s3Facade.getUrl(board.getImageUrl()))
                         .build();
                 boardLists.add(dto);
             }
@@ -123,6 +129,7 @@ public class BoardServiceImpl implements BoardService {
                     .date(dateService.betweenDate(board.getBoardTime()))
                     .view(board.getView())
                     .commentCount(board.getComments().size())
+                    .imageUrl(s3Facade.getUrl(board.getImageUrl()))
                     .build();
             boardLists.add(dto);
         }
@@ -161,6 +168,7 @@ public class BoardServiceImpl implements BoardService {
                 .isLiked(writerLike(board))
                 .commentCount(board.getComments().size())
                 .heart(board.getHeart())
+                .imageUrl(s3Facade.getUrl(board.getImageUrl()))
                 .userId(board.getUser().getId()).build();
     }
 
@@ -193,6 +201,7 @@ public class BoardServiceImpl implements BoardService {
                     .date(dateService.betweenDate(board.getBoardTime()))
                     .view(board.getView())
                     .commentCount(board.getComments().size())
+                    .imageUrl(s3Facade.getUrl(board.getImageUrl()))
                     .build();
             boardLists.add(dto);
         }

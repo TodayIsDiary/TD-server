@@ -35,6 +35,8 @@ public class Comment {
 
     private int heart;
 
+    private String imageUrl;
+
     @ColumnDefault("false")
     private boolean originChat;
 
@@ -62,13 +64,14 @@ public class Comment {
     }
 
     @Builder
-    public Comment(String writer, String comments, User user, Board board, Long originChatId, Long replyChatId) {
+    public Comment(String writer, String comments, User user, Board board, Long originChatId, Long replyChatId, String imageUrl) {
         this.writer = writer;
         this.comments = comments;
         this.user = user;
         this.board = board;
         this.originChatId = originChatId;
         this.replyChatId= replyChatId;
+        this.imageUrl = imageUrl;
     }
 
     public void setChat(String comment){

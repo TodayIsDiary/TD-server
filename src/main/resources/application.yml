@@ -34,3 +34,16 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
+    s3:
+      bucket: ${BUCKET_NAME}
+      dir: ${DIR_NAME}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

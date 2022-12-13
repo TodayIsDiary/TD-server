@@ -37,6 +37,8 @@ public class Board {
 
     private int view;
 
+    private String imageUrl;
+
     @PrePersist
     public void prePersist(){
         this.boardTime = LocalDateTime.now();
@@ -56,11 +58,12 @@ public class Board {
     private List<Comment> comments;
 
     @Builder
-    public Board(String title, String content, BoardCategory category,User user){
+    public Board(String title, String content, BoardCategory category,User user, String imageUrl){
         this.title = title;
         this.content = content;
         this.category = category;
         this.user = user;
+        this.imageUrl = imageUrl;
     }
 
     public void setBord(String title, String content, BoardCategory category){
@@ -68,6 +71,8 @@ public class Board {
         this.content = content;
         this.category = category;
     }
+
+    public void changeImage(String imageUrl){this.imageUrl = imageUrl;}
 
     public void addView(){this.view += 1;}
 

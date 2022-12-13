@@ -87,7 +87,7 @@ public class UserController {
 
     @Operation(summary = "회원가입 이메일 인증")
     @PostMapping("/email")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void signupEmail(@RequestBody MailRequest request) throws Exception {
         userService.signupEmail(request);
     }
