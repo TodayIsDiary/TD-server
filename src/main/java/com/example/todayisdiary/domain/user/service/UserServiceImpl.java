@@ -143,6 +143,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userFacade.getCurrentUser();
 
+        s3Facade.delUser(user);
         userRepository.delete(user);
     }
 

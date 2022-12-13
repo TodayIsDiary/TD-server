@@ -63,6 +63,7 @@ public class BoardServiceImpl implements BoardService {
     public void delBoard(Long id) {
         Board board = boardFacade.getBoardById(id);
         userMatch(board);
+        s3Facade.delBoard(board);
 
         boardRepository.delete(board);
     }
