@@ -3,6 +3,7 @@ package com.example.todayisdiary.global.config;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.global.security.filter.JwtAuthenticationFilter;
 import com.example.todayisdiary.global.security.jwt.JwtProvider;
+import com.example.todayisdiary.global.security.oauth.service.Oauth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
+    private final Oauth2Service oauth2Service;
 
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -45,6 +47,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/report/detail/**").hasRole(Role.ROLE_ADMIN.getKey())
                 .antMatchers(HttpMethod.DELETE, "/report/del/**").hasRole(Role.ROLE_ADMIN.getKey())
                 .antMatchers(HttpMethod.POST, "/image/sign/user").permitAll()
+                .antMatchers("/oauth2/authorization/google").permitAll()
 
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/v3/api-docs/**").permitAll()
@@ -54,7 +57,15 @@ public class SecurityConfig {
                 .and()
 
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
-                        UsernamePasswordAuthenticationFilter.class);
+                        UsernamePasswordAuthenticationFilter.class)
+
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorization")
+                .and()
+                .userInfoEndpoint()
+                .userService(oauth2Service);
+
         return http.build();
     }
 
