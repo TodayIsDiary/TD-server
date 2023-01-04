@@ -53,6 +53,10 @@ dependencies {
     // S3
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.281'
 
+    //oauth
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.7.4'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.7.4'
+
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
