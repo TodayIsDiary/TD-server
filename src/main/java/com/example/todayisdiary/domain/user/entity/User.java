@@ -9,6 +9,7 @@ import com.example.todayisdiary.domain.report.entity.UserReport;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.enums.Sex;
 import com.example.todayisdiary.global.mail.entity.Mail;
+import com.example.todayisdiary.global.security.oauth.entity.ProviderType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -57,6 +59,10 @@ public class User {
 
     private String imageUrl;
 
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private ProviderType providerType;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Board> boards;
 
@@ -79,7 +85,7 @@ public class User {
     private List<UserReport> userReports;
 
     @Builder
-    public User(String accountId, String nickName, String email, String password, String introduction, Sex sex, String imageUrl){
+    public User(String accountId, String nickName, String email, String password, String introduction, Sex sex, String imageUrl, ProviderType providerType){
         this.accountId = accountId;
         this.nickName = nickName;
         this.email = email;
@@ -88,6 +94,7 @@ public class User {
         this.sex = sex;
         this.role = Role.ROLE_USER;
         this.imageUrl = imageUrl;
+        this.providerType = providerType;
     }
 
     public void userProfileChange(String imageUrl){this.imageUrl = imageUrl;}
