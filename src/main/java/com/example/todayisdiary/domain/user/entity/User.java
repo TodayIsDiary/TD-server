@@ -108,6 +108,10 @@ public class User {
         this.introduction = introduction;
     }
 
+    public void setNickName(String nickName){
+        this.nickName = nickName;
+    }
+
     public void setPassword(String password){
         this.password = password;
     }
