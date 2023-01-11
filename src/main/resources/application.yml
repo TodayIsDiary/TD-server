@@ -24,6 +24,35 @@ spring:
           starttls:
             enable: true
 
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            clientId: ${KAKAKO_CLINET_ID}
+            clientSecret: ${KAKAO_CLIENT_SECRET}
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            redirectUri: http://localhost:8080/login/oauth/kakao
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+              - gender
+            clientName: Kakao
+          google: # /oauth2/authorization/google 이 주소를 동작하게 한다.
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+          provider:
+            kakao:
+              authorization-uri: https://kauth.kakao.com/oauth/authorize
+              token-uri: https://kauth.kakao.com/oauth/token
+              user-info-uri: https://kapi.kakao.com/v2/user/me
+              user-name-attribute: id
+
   jwt:
     key: ${JWT_KEY}
     live:
