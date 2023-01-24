@@ -1,6 +1,6 @@
 <!-- PROJECT LOGO -->
 <div align="center">
-<img src="https://user-images.githubusercontent.com/81291090/208279388-1a7c053e-46f0-4b6d-85fd-0ae52e27b215.png" alt="Logo" width="80" > 
+<img src="https://media.discordapp.net/attachments/822309850700054548/1067459622664945684/46dcf26d6ba2b65a.jpg?width=1203&height=267" alt="Logo" width="80" > 
   <h1>사용자의 상황 맞춤형 소통 및 공유 플랫폼 MBook</h1>
 
 </div>
@@ -16,19 +16,18 @@
 
 ## 프로젝트 소개
 
-### 서비스 이름 : 📕 엠북 (MBook) 📕
+### 서비스 이름 : 🌃 하루의 끝 (Today_IS_Diary) 🌃
 
-> 사용자의 장소와 시간대, 날씨에 따라 사용자 맞춤으로 영화와 책을 추천해주고 다른사람과 공유할 수 있는 서비스
+> 하루를 끝내며 쓰는 일기들을 쓰고 다른사람들과 자신의 하루를 공유할 수 있는 커뮤니티형 서비스
 
 - **부제**: 사용자의 상황 맞춤형 소통 및 공유 플랫폼
 
-- **타겟층**: 영화와 책에 관심있는 모든 이웃
+- **타겟층**: 하루가 끝나기전 일기를 쓰시는 분, 새벽감성을 좋아 하시는 분
 
 - **서비스 주요 기능**<br/>
-  1️⃣ 영화 및 책 추천<br/>
-  2️⃣ 영화 및 책 리뷰<br/>
-  3️⃣ 영화 및 책 소모임<br/>
-  4️⃣ 소모임 채팅
+  1️⃣ 오늘의 감정일기 쓰기<br/>
+  2️⃣ 카테고리별 일기 리스트<br/>
+  3️⃣ 부적절한 일기&사용자&댓글 신고<br/>
 
 <br/>
 
@@ -38,9 +37,9 @@
   <tr>
     <td align="center">
       <a href="https://github.com/Mbook-APPJAM">
-        <img src="https://user-images.githubusercontent.com/81291090/208234083-45f21198-688c-4385-a35f-d8be03dd3ecb.jpg" width="100px;" height="100px;" alt="" /><br />
+        <img src="https://avatars.githubusercontent.com/u/77564428" width="100px;" alt="" /><br />
         <sub>
-          <b>윤다현</b><br />
+          <b>이상운</b><br />
           <b>디자이너</b>
         </sub>
       </a>
@@ -49,7 +48,7 @@
       <a href="https://github.com/biscrab">
         <img src="https://avatars.githubusercontent.com/u/77564428" width="100px;" alt="" /><br />
         <sub>
-          <b>이상운</b><br />
+          <b>박상민</b><br />
           <b>프론트엔드</b>
         </sub>
       </a>
@@ -67,17 +66,8 @@
       <a href="https://github.com/wheeeung">
         <img src="https://avatars.githubusercontent.com/u/81683181" width="100px;" alt="" /><br />
         <sub>
-          <b>박휘응</b><br />
-          <b>백엔드</b>
-        </sub>
-      </a>
-    </td>
-    <td align="center">
-      <a href="https://github.com/skmn3">
-        <img src="https://avatars.githubusercontent.com/skmn3" width="100px;" alt="" /><br />
-        <sub>
-          <b>박상진</b><br />
-          <b>기획 및 PM</b>
+          <b>이준범</b><br />
+          <b>안드로이드</b>
         </sub>
       </a>
     </td>
@@ -89,17 +79,20 @@
 
 ## 기술 스택
 
-### [FRONTEND](https://github.com/Mbook-APPJAM/MBook_FrontEnd)
+### [FRONTEND](https://github.com/TodayIsDiary/TD-Front-End)
 
-- Next.js, Typescript
-- Axios
-- Emotion.js
+- CSS
+- JavaScript
 
-### [BACKEND](https://github.com/Mbook-APPJAM/MBook_Server)
+### [BACKEND](https://github.com/TodayIsDiary/TD-server)
 
 - Java 11, Spring Boot, JPA, Spring security, JWT, Query
 - MySQL, Redis
 - AWS EC2, RDS, S3
-- SMTP, STOMP
+- SMTP
+
+### [Android](https://github.com/TodayIsDiary/TD_Android)
+
+- Kotlin
 
 <br/>
