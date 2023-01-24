@@ -1,6 +1,6 @@
 <!-- PROJECT LOGO -->
 <div align="center">
-<img src="https://media.discordapp.net/attachments/822309850700054548/1067459622664945684/46dcf26d6ba2b65a.jpg?width=1203&height=267" alt="Logo" width="80" > 
+<img src="https://media.discordapp.net/attachments/822309850700054548/1067459622664945684/46dcf26d6ba2b65a.jpg?width=1203&height=267" alt="Logo" hight = "100" width="80" > 
   <h1>사용자의 상황 맞춤형 소통 및 공유 플랫폼 MBook</h1>
 
 </div>
@@ -36,7 +36,7 @@
 <table>
   <tr>
     <td align="center">
-      <a href="https://github.com/Mbook-APPJAM">
+      <a href="https://github.com/biscrab">
         <img src="https://avatars.githubusercontent.com/u/77564428" width="100px;" alt="" /><br />
         <sub>
           <b>이상운</b><br />
@@ -45,8 +45,8 @@
       </a>
     </td>
     <td align="center">
-      <a href="https://github.com/biscrab">
-        <img src="https://avatars.githubusercontent.com/u/77564428" width="100px;" alt="" /><br />
+      <a href="https://github.com/smp6340">
+        <img src="https://avatars.githubusercontent.com/u/80257631?v=4" width="100px;" alt="" /><br />
         <sub>
           <b>박상민</b><br />
           <b>프론트엔드</b>
@@ -63,8 +63,8 @@
       </a>
     </td>
     <td align="center">
-      <a href="https://github.com/wheeeung">
-        <img src="https://avatars.githubusercontent.com/u/81683181" width="100px;" alt="" /><br />
+      <a href="https://github.com/Zi-nal">
+        <img src="https://avatars.githubusercontent.com/u/66670566?v=4" width="100px;" alt="" /><br />
         <sub>
           <b>이준범</b><br />
           <b>안드로이드</b>
