@@ -9,6 +9,7 @@ import com.example.todayisdiary.global.mail.entity.Mail;
 import com.example.todayisdiary.global.mail.repository.MailRepository;
 import com.example.todayisdiary.global.mail.service.MailService;
 import com.example.todayisdiary.global.s3.facade.S3Facade;
+import com.example.todayisdiary.global.security.oauth.entity.ProviderType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,6 +41,10 @@ public class UserServiceImpl implements UserService {
             throw new IllegalStateException("인증 코드가 다릅니다.");
         }
 
+        if(!request.getPassword().equals(request.getPasswordValid())){
+            throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+        }
+
         User user = User.builder()
                 .accountId(request.getAccountId())
                 .nickName(request.getNickName())
@@ -47,7 +52,8 @@ public class UserServiceImpl implements UserService {
                 .sex(request.getSex())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .introduction(request.getIntroduction())
-                .imageUrl(request.getImageUrl()).build();
+                .imageUrl(request.getImageUrl())
+                .providerType(ProviderType.LOCAL).build();
 
         userRepository.save(user);
         mailRepository.delete(mail);
