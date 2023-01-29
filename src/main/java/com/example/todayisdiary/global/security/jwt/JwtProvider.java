@@ -52,6 +52,20 @@ public class JwtProvider {
         );
         return new TokenResponse(atk, rtk);
     }
+    public String createAtk(UserResponse userResponse){
+        return createToken(userResponse, atkTime, "atk");
+    }
+
+    public String createRtk(UserResponse userResponse){
+        String rtk = createToken(userResponse, rtkTime, "rtk");
+        refreshTokenRepository.save(
+                RefreshToken.builder()
+                        .accountId(userResponse.getAccountId())
+                        .refreshToken(rtk)
+                        .rtkTime(rtkTime).build()
+        );
+        return rtk;
+    }
 
     // Jwt 토큰 인증 정보조회
     public Authentication getAuthentication(String token) {
