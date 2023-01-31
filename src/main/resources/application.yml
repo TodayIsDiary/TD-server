@@ -24,6 +24,28 @@ spring:
           starttls:
             enable: true
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google: # /oauth2/authorization/google 이 주소를 동작하게 한다.
+            clientId: ${CLIENT_ID}
+            clientSecret: ${CLIENT_SECRET}
+            redirectUri: http://localhost:8080/user/google/login
+            scope:
+              - email
+              - profile
+          kakao:
+            clientSecret: ${KAKAO_CLIENT_SECRET}
+            authorizationGrantType: authorization_code
+            redirectUri: http://localhost:8080/user/kakao/login
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+            clientName: Kakao
+            clientAuthenticationMethod: POST
+
   jwt:
     key: ${JWT_KEY}
     live:
@@ -32,7 +54,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
 
 cloud:

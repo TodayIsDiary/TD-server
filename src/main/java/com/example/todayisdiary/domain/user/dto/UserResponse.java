@@ -18,4 +18,12 @@ public class UserResponse {
                     .email(user.getEmail())
                     .role(user.getRole()).build();
     }
+
+    public static UserResponse snsOf(String email, String accountId, Role role){
+        return UserResponse.builder()
+                .accountId(accountId)
+                .email(email)
+                .role(role).build();
+    }
+
 }
