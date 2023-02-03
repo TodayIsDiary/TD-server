@@ -4,6 +4,8 @@ import com.example.todayisdiary.domain.user.dto.*;
 import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
 import com.example.todayisdiary.domain.user.repository.UserRepository;
+import com.example.todayisdiary.global.error.ErrorCode;
+import com.example.todayisdiary.global.error.exception.CustomException;
 import com.example.todayisdiary.global.mail.dto.MailRequest;
 import com.example.todayisdiary.global.mail.entity.Mail;
 import com.example.todayisdiary.global.mail.repository.MailRepository;
@@ -31,18 +33,18 @@ public class UserServiceImpl implements UserService {
     public void signup(SignupRequest request) {
         boolean exists = userRepository.existsByEmail(request.getEmail());
         boolean exists2 = userRepository.existsByAccountId(request.getAccountId());
-        if (exists) throw new IllegalStateException("이미 가입하신 이메일 입니다.");
-        if (exists2) throw new IllegalStateException("이미 있는 아이디 입니다.");
+        if (exists) throw new CustomException(ErrorCode.EXIST_EMAIL);
+        if (exists2) throw new CustomException(ErrorCode.EXIST_USER);
 
         Mail mail = mailRepository.findMailByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("회원가입하는 이메일이 아닙니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.EMAIL_MISS_MATCHED));
 
         if (!mail.getCode().equals(request.getCode())) {
-            throw new IllegalStateException("인증 코드가 다릅니다.");
+            throw new CustomException(ErrorCode.CODE_MISS_MATCHED);
         }
 
         if(!request.getPassword().equals(request.getPasswordValid())){
-            throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+            throw new CustomException(ErrorCode.PASSWORD_MISS_MATCHED);
         }
 
         User user = User.builder()
@@ -66,7 +68,7 @@ public class UserServiceImpl implements UserService {
         User user = userFacade.getUserByAccountId(request.getAccountId());
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+            throw new CustomException(ErrorCode.PASSWORD_MISS_MATCHED);
         }
 
         return UserResponse.of(user);
@@ -86,15 +88,14 @@ public class UserServiceImpl implements UserService {
     public void setPasswordEmail(PasswordRequest request) {
 
         Mail mail = mailRepository.findMailByCode(request.getCode())
-                .orElseThrow(() -> new IllegalArgumentException("코드를 다시 입력 해주세요.."));
+                .orElseThrow(() -> new CustomException(ErrorCode.CODE_MISS_MATCHED));
 
         User user = userFacade.getUserByEmail(mail.getEmail());
 
         if (!request.getNewPassword().equals(request.getNewPasswordValid())) {
-            throw new IllegalStateException("비밀번호가 맞지 않습니다.");
+            throw new CustomException(ErrorCode.PASSWORD_MISS_MATCHED);
         }
 
-        log.info("비밀번호가 {}로 바꼈습니다.", request.getNewPassword());
         mailRepository.delete(mail);
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
@@ -106,11 +107,11 @@ public class UserServiceImpl implements UserService {
         User user = userFacade.getCurrentUser();
 
         if(!passwordEncoder.matches(request.getOriginalPassword(), user.getPassword())){
-            throw new IllegalStateException("원래 비밀번호가 맞지 않습니다.");
+            throw new CustomException(ErrorCode.ORIGIN_PASSWORD_MISS_MATCHED);
         }
 
         if(!request.getNewPassword().equals(request.getNewPasswordValid())){
-            throw new IllegalStateException("변경하는 비밀번호가 맞지 않습니다.");
+            throw new CustomException(ErrorCode.CHANGE_PASSWORD_MISS_MATCHED);
         }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
