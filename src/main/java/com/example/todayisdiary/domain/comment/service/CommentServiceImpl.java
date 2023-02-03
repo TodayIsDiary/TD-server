@@ -13,6 +13,8 @@ import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
 import com.example.todayisdiary.global.date.DateService;
+import com.example.todayisdiary.global.error.ErrorCode;
+import com.example.todayisdiary.global.error.exception.CustomException;
 import com.example.todayisdiary.global.s3.facade.S3Facade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +30,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentFacade commentFacade;
-    private final S3Facade s3Facade;
     private final UserFacade userFacade;
     private final BoardFacade boardFacade;
     private final CommentRepository commentRepository;
@@ -188,8 +189,8 @@ public class CommentServiceImpl implements CommentService {
     private void userMath(Comment comment) {
         User user = userFacade.getCurrentUser();
         if (comment.getWriter().equals(user.getNickName()) || user.getRole() == Role.ROLE_ADMIN) {
-            log.info("권한이 성공하였습니다.");
-        } else throw new IllegalStateException("작성한 댓글이 아닙니다.");
+            ;
+        } else throw new CustomException(ErrorCode.USER_MISS_MATCHED);
     }
 
     private boolean writerLike(Comment comment){

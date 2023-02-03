@@ -10,6 +10,8 @@ import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
 import com.example.todayisdiary.domain.user.repository.UserRepository;
+import com.example.todayisdiary.global.error.ErrorCode;
+import com.example.todayisdiary.global.error.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -87,6 +89,6 @@ public class S3Upload {
 
     private void userMatch(Board board) {
         if (board.getUser().getAccountId().equals(userFacade.getCurrentUser().getAccountId()) || userFacade.getCurrentUser().getRole() == Role.ROLE_ADMIN) {
-        } else throw new IllegalStateException("권한이 없습니다.");
+        } else throw new CustomException(ErrorCode.USER_MISS_MATCHED);
     }
 }

@@ -2,6 +2,8 @@ package com.example.todayisdiary.domain.board.facade;
 
 import com.example.todayisdiary.domain.board.entity.Board;
 import com.example.todayisdiary.domain.board.repository.BoardRepository;
+import com.example.todayisdiary.global.error.ErrorCode;
+import com.example.todayisdiary.global.error.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
@@ -15,7 +17,7 @@ public class BoardFacade {
 
     public Board getBoardById(Long id){
         return boardRepository.findBoardById(id)
-                .orElseThrow(() -> new IllegalArgumentException("일기를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
     }
 
     public List<Board> getBoardAllById(Sort sort){

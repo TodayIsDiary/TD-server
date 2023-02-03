@@ -1,6 +1,8 @@
 package com.example.todayisdiary.global.security.jwt;
 
 import com.example.todayisdiary.domain.user.dto.UserResponse;
+import com.example.todayisdiary.global.error.ErrorCode;
+import com.example.todayisdiary.global.error.exception.CustomException;
 import com.example.todayisdiary.global.security.jwt.dto.TokenResponse;
 import com.example.todayisdiary.global.security.jwt.entity.RefreshToken;
 import com.example.todayisdiary.global.security.jwt.repository.RefreshTokenRepository;
@@ -106,7 +108,7 @@ public class JwtProvider {
 
     public TokenResponse reissueAtk(UserResponse userResponse) {
         boolean rtkInRedis = refreshTokenRepository.existsByAccountId(userResponse.getAccountId());
-        if (rtkInRedis) throw new IllegalStateException("인증 정보가 만료되었습니다.");
+        if (rtkInRedis) throw new CustomException(ErrorCode.JWT_EXPIRED);
         return new TokenResponse(createToken(userResponse, atkTime, "atk"), null);
     }
 
