@@ -13,6 +13,8 @@ import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
 import com.example.todayisdiary.global.date.DateService;
+import com.example.todayisdiary.global.error.ErrorCode;
+import com.example.todayisdiary.global.error.exception.CustomException;
 import com.example.todayisdiary.global.s3.facade.S3Facade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -174,7 +176,7 @@ public class BoardServiceImpl implements BoardService {
 
     private void userMatch(Board board) {
         if (board.getUser().getAccountId().equals(userFacade.getCurrentUser().getAccountId()) || userFacade.getCurrentUser().getRole() == Role.ROLE_ADMIN) {
-        } else throw new IllegalStateException("권한이 없습니다.");
+        } else throw new CustomException(ErrorCode.USER_MISS_MATCHED);
     }
 
     private boolean writerLike(Board board){
