@@ -13,9 +13,22 @@ public enum ErrorCode {
     USER_ALREADY_EXISTS(409, "User Already Exists"),
     USER_MISS_MATCHED(409, "User Miss Match"),
     ROLE_NOT_FOUND(404,"Role Not Found"),
+    BOARD_NOT_FOUND(404, "Board Not Found"),
+    COMMENT_NOT_FOUND(404, "Comment Not Found"),
+    REPORT_USER_NOT_FOUND(404, "Report User Not Found"),
+    REPORT_COMMENT_NOT_FOUND(404, "Report Comment Not Found"),
+    REPORT_BOARD_NOT_FOUND(404, "Report Board Not Found"),
     EMAIL_NOT_FOUND(404, "Email Not Found"),
+    EMAIL_MISS_MATCHED(409, "Email Miss Match"),
     CODE_NOT_FOUND(404, "Code Not Found"),
     PASSWORD_MISS_MATCHED(409, "Password Miss Match"),
+    ORIGIN_PASSWORD_MISS_MATCHED(409, "Origin Password Miss Match"),
+    CHANGE_PASSWORD_MISS_MATCHED(409, "Change Password Miss Match"),
+
+    CODE_MISS_MATCHED(409,"Code Miss Match"),
+
+    EXIST_EMAIL(401, "Exist Email"),
+    EXIST_USER(401, "Exist User"),
 
     IMAGE_NOT_FOUND(404, "Image Not Found"),
     INVALID_IMAGE_EXTENSION(401, "Invalid Image Extension"),
