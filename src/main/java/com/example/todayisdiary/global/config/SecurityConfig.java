@@ -53,6 +53,8 @@ public class SecurityConfig {
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/v3/api-docs/**").permitAll()
 
+                .antMatchers("/.well-known/acme-challenge/**").permitAll()
+
                 .anyRequest().authenticated()
 
                 .and()
