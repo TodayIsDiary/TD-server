@@ -1,7 +1,7 @@
 <!-- PROJECT LOGO -->
 <div align="center">
 <img src="https://media.discordapp.net/attachments/822309850700054548/1067459622664945684/46dcf26d6ba2b65a.jpg?width=1203&height=267" alt="Logo"> 
-  <h1>하루의 끝을 일기로... 하루의끝</h1>
+  <h1>하루의 끝을 일기로.. 하루의끝</h1>
 
 </div>
 
