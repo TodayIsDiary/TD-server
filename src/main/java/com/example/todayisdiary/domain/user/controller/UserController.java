@@ -37,6 +37,12 @@ public class UserController {
         return jwtProvider.createTokenByLogin(userResponse);
     }
 
+    @Operation(summary = "아이디 중복 체크")
+    @GetMapping("/check")
+    public boolean accountIdCheck(@RequestParam(name = "accountId") String accountId){
+        return userService.newNickName(accountId);
+    }
+
     @Operation(summary = "토큰 재발급")
     @PostMapping("/reissue")
     public TokenResponse reissue(
