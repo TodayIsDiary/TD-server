@@ -6,6 +6,7 @@ import com.example.todayisdiary.global.security.oauth.dto.SocialLoginResponse;
 import com.example.todayisdiary.global.security.oauth.entity.GoogleOauth;
 import com.example.todayisdiary.global.security.oauth.entity.KakaoOauth;
 import com.example.todayisdiary.global.security.oauth.service.OAuthService;
+import com.example.todayisdiary.global.security.oauth.service.OAuthServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
