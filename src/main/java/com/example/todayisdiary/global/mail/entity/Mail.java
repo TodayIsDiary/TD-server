@@ -18,7 +18,6 @@ public class Mail {
 
     private String code;
 
-    @Email
     private String email;
 
     @ManyToOne
