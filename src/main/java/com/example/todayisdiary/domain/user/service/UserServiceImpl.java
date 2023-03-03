@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -32,9 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void signup(SignupRequest request) {
         boolean exists = userRepository.existsByEmail(request.getEmail());
-        boolean exists2 = userRepository.existsByAccountId(request.getAccountId());
         if (exists) throw new CustomException(ErrorCode.EXIST_EMAIL);
-        if (exists2) throw new CustomException(ErrorCode.EXIST_USER);
 
         Mail mail = mailRepository.findMailByEmail(request.getEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.EMAIL_MISS_MATCHED));
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(ErrorCode.CODE_MISS_MATCHED);
         }
 
-        if(!request.getPassword().equals(request.getPasswordValid())){
+        if (!request.getPassword().equals(request.getPasswordValid())) {
             throw new CustomException(ErrorCode.PASSWORD_MISS_MATCHED);
         }
 
@@ -53,12 +53,13 @@ public class UserServiceImpl implements UserService {
                 .email(request.getEmail())
                 .sex(request.getSex())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .imageUrl(defaultImage(request.getImageUrl()))
                 .introduction(request.getIntroduction())
-                .imageUrl(request.getImageUrl())
                 .providerType(ProviderType.LOCAL).build();
 
         userRepository.save(user);
         mailRepository.delete(mail);
+
     }
 
     @Transactional
@@ -72,6 +73,14 @@ public class UserServiceImpl implements UserService {
         }
 
         return UserResponse.of(user);
+    }
+
+    @Transactional
+    @Override
+    public boolean newNickName(String accountId) {
+        boolean exists = userRepository.existsByAccountId(accountId);
+        if (exists) throw new CustomException(ErrorCode.EXIST_USER);
+        else return true;
     }
 
     @Override
@@ -103,14 +112,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void setPasswords(PasswordRequest request){
+    public void setPasswords(PasswordRequest request) {
         User user = userFacade.getCurrentUser();
 
-        if(!passwordEncoder.matches(request.getOriginalPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(request.getOriginalPassword(), user.getPassword())) {
             throw new CustomException(ErrorCode.ORIGIN_PASSWORD_MISS_MATCHED);
         }
 
-        if(!request.getNewPassword().equals(request.getNewPasswordValid())){
+        if (!request.getNewPassword().equals(request.getNewPasswordValid())) {
             throw new CustomException(ErrorCode.CHANGE_PASSWORD_MISS_MATCHED);
         }
 
@@ -128,7 +137,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional()
-    public UserInfoResponse getUser(Long id){
+    public UserInfoResponse getUser(Long id) {
         User user = userFacade.getUserById(id);
         user.addVisit();
         return myPage(user);
@@ -162,7 +171,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private UserInfoResponse myPage(User user){
+    private UserInfoResponse myPage(User user) {
         return UserInfoResponse.builder()
                 .nickName(user.getNickName())
                 .introduction(user.getIntroduction())
@@ -172,5 +181,10 @@ public class UserServiceImpl implements UserService {
                 .sex(user.getSex())
                 .email(user.getEmail())
                 .imagUrl(s3Facade.getUrl(user.getImageUrl())).build();
+    }
+
+    private String defaultImage(String imageUrl){
+        if(Objects.equals(imageUrl, "null")){return "4f743a16-e96f-49e7-9c11-0948592dab18-5087579.png";}
+        else return imageUrl == null ? "4f743a16-e96f-49e7-9c11-0948592dab18-5087579.png" : imageUrl;
     }
 }
