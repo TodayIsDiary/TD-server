@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -126,7 +127,7 @@ public class OAuthServiceImpl implements OAuthService{
                         .password(null)
                         .sex(request.getSex())
                         .introduction(request.getIntroduction())
-                        .imageUrl(request.getImageUrl() == null ? "4f743a16-e96f-49e7-9c11-0948592dab18-5087579.png" : request.getImageUrl())
+                        .imageUrl(defaultImage(request.getImageUrl()))
                         .providerType(request.getProviderType())
                         .build()
         );
@@ -141,5 +142,10 @@ public class OAuthServiceImpl implements OAuthService{
                 atk,
                 rtk
         ), HttpStatus.OK);
+    }
+
+    private String defaultImage(String imageUrl){
+        if(Objects.equals(imageUrl, "null")){return "4f743a16-e96f-49e7-9c11-0948592dab18-5087579.png";}
+        else return imageUrl == null ? "4f743a16-e96f-49e7-9c11-0948592dab18-5087579.png" : imageUrl;
     }
 }
