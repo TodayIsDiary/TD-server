@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -37,7 +36,6 @@ public class User {
     @Length(min = 2, max = 12)
     private String nickName;
 
-    @Email
     @Length(min = 6, max = 30)
     private String email;
 
@@ -85,7 +83,7 @@ public class User {
     private List<UserReport> userReports;
 
     @Builder
-    public User(String accountId, String nickName, String email, String password, String introduction, Sex sex, String imageUrl, ProviderType providerType){
+    public User(String accountId, String nickName, String email, String password, String introduction, Sex sex, ProviderType providerType,String imageUrl){
         this.accountId = accountId;
         this.nickName = nickName;
         this.email = email;
@@ -93,8 +91,8 @@ public class User {
         this.introduction = introduction;
         this.sex = sex;
         this.role = Role.ROLE_USER;
-        this.imageUrl = imageUrl;
         this.providerType = providerType;
+        this.imageUrl = imageUrl;
     }
 
     public void userProfileChange(String imageUrl){this.imageUrl = imageUrl;}
