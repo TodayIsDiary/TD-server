@@ -29,6 +29,12 @@ public class MailServiceImpl implements MailService{
         User user = userRepository.findUserByAccountId(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("이메일을 찾을 수 없습니다."));
 
+        boolean exits = mailRepository.existsByEmail(user.getEmail());
+        if(exits) {
+            Mail mail = mailFacade.getMail(user.getEmail());
+            mailRepository.delete(mail);
+        }
+
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < 4; i++) {
