@@ -11,6 +11,8 @@ public interface UserService {
     // 자체 로그인, POST , /user/login
     UserResponse login(LoginRequest request);
 
+    boolean newNickName(String accountId);
+
     // 이메일 코드 보낼때, POST , /user/lost/password
     void lostPassword(MailRequest mailDto) throws Exception;
 
