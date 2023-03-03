@@ -14,6 +14,9 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @EnableWebSecurity
 @Configuration
@@ -24,21 +27,31 @@ public class SecurityConfig {
 
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http.cors().configurationSource(request -> {
+                    var cors = new CorsConfiguration();
+                    cors.setAllowedOrigins(List.of("http://localhost:3000"));
+                    cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+                    cors.setAllowedHeaders(List.of("*"));
+                    return cors;
+                });
+
         http
 
                 .formLogin().disable()
                 .csrf().disable()
-                .cors().disable()
 
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
 
                 .authorizeRequests()
+                .antMatchers("/").permitAll()
                 .antMatchers(HttpMethod.POST, "/user/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/user/signup").permitAll()
                 .antMatchers(HttpMethod.GET, "/user/google/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/user/kakao/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/user/check").permitAll()
                 .antMatchers(HttpMethod.POST,"/user/new/sns").permitAll()
                 .antMatchers("/oauth2/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/user/reissue").permitAll()
