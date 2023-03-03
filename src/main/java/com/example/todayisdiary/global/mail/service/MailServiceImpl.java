@@ -4,6 +4,7 @@ import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.repository.UserRepository;
 import com.example.todayisdiary.global.mail.dto.MailRequest;
 import com.example.todayisdiary.global.mail.entity.Mail;
+import com.example.todayisdiary.global.mail.facade.MailFacade;
 import com.example.todayisdiary.global.mail.repository.MailRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,6 +21,7 @@ public class MailServiceImpl implements MailService{
     private final JavaMailSender javaMailSender;
     private final MailRepository mailRepository;
     private final UserRepository userRepository;
+    private final MailFacade mailFacade;
 
     public String randomMessage(String accountId) {
 
@@ -141,6 +143,12 @@ public class MailServiceImpl implements MailService{
     }
 
     public String randomSignupMessage(String email) {
+
+        boolean exits = mailRepository.existsByEmail(email);
+        if(exits) {
+            Mail mail = mailFacade.getMail(email);
+            mailRepository.delete(mail);
+        }
 
         SecureRandom random = new SecureRandom();
 
