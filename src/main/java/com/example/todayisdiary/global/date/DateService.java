@@ -4,4 +4,6 @@ import java.time.LocalDateTime;
 
 public interface DateService {
     String betweenDate(LocalDateTime dateTime);
+
+    boolean invalidCode(LocalDateTime dateTime);
 }
