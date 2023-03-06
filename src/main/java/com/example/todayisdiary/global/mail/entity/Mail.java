@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -20,6 +20,8 @@ public class Mail {
 
     private String email;
 
+    private LocalDateTime createTime;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
@@ -28,6 +30,7 @@ public class Mail {
     public Mail(String code, String email){
         this.code = code;
         this.email = email;
+        this.createTime = LocalDateTime.now();
     }
 
     @Builder
@@ -35,6 +38,7 @@ public class Mail {
         this.code = code;
         this.email = email;
         this.user = user;
+        this.createTime = LocalDateTime.now();
     }
 
 }
