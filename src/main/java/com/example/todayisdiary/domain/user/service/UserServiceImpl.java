@@ -4,6 +4,7 @@ import com.example.todayisdiary.domain.user.dto.*;
 import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
 import com.example.todayisdiary.domain.user.repository.UserRepository;
+import com.example.todayisdiary.global.date.DateServiceImpl;
 import com.example.todayisdiary.global.error.ErrorCode;
 import com.example.todayisdiary.global.error.exception.CustomException;
 import com.example.todayisdiary.global.mail.dto.MailRequest;
@@ -30,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
     private final MailRepository mailRepository;
+    private final DateServiceImpl dateService;
 
     @Override
     public void signup(SignupRequest request) {
@@ -41,6 +43,10 @@ public class UserServiceImpl implements UserService {
 
         if (!mail.getCode().equals(request.getCode())) {
             throw new CustomException(ErrorCode.CODE_MISS_MATCHED);
+        }
+
+        if(dateService.invalidCode(mail.getCreateTime())){
+            throw new CustomException(ErrorCode.CODE_EXPIRED);
         }
 
         if (!request.getPassword().equals(request.getPasswordValid())) {
@@ -98,6 +104,10 @@ public class UserServiceImpl implements UserService {
 
         Mail mail = mailRepository.findMailByCode(request.getCode())
                 .orElseThrow(() -> new CustomException(ErrorCode.CODE_MISS_MATCHED));
+
+        if(dateService.invalidCode(mail.getCreateTime())){
+            throw new CustomException(ErrorCode.CODE_EXPIRED);
+        }
 
         User user = userFacade.getUserByEmail(mail.getEmail());
 
