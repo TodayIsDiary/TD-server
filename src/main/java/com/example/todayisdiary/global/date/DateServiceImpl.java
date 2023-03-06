@@ -25,4 +25,11 @@ public class DateServiceImpl implements DateService {
             } else return diff.toMinutes() + "분전";
         } else return "방금전";
     }
+
+    @Override
+    public boolean invalidCode(LocalDateTime dateTime){
+        LocalDateTime now = LocalDateTime.now();
+        Duration diff = Duration.between(dateTime.toLocalTime(), now.toLocalTime());
+        return diff.toMinutes() >= 3;
+    }
 }
