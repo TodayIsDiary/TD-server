@@ -54,6 +54,7 @@ public class UserController {
 
     @Operation(summary = "비밀번호 찾기-이메일 입력")
     @PostMapping("/lost/password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void mail(@Valid @RequestBody MailRequest dto)throws Exception{
         userService.lostPassword(dto);
     }
