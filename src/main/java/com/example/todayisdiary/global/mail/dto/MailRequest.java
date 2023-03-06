@@ -8,6 +8,5 @@ import javax.validation.constraints.Email;
 @Getter
 @RequiredArgsConstructor
 public class MailRequest {
-    @Email
     private String email;
 }
