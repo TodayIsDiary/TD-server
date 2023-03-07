@@ -21,6 +21,7 @@ public enum ErrorCode {
     EMAIL_NOT_FOUND(404, "Email Not Found"),
     EMAIL_MISS_MATCHED(409, "Email Miss Match"),
     CODE_NOT_FOUND(404, "Code Not Found"),
+    CODE_EXPIRED(401, "Code Expired"),
     PASSWORD_MISS_MATCHED(409, "Password Miss Match"),
     ORIGIN_PASSWORD_MISS_MATCHED(409, "Origin Password Miss Match"),
     CHANGE_PASSWORD_MISS_MATCHED(409, "Change Password Miss Match"),
