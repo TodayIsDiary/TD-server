@@ -1,17 +1,23 @@
 package com.example.todayisdiary.domain.user.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Pattern;
 
+@AllArgsConstructor
 @Getter
-@NoArgsConstructor
-public class PasswordRequest {
+public class CheckRequest {
     private String email;
-    private String originalPassword;
+
+    private Boolean chek;
+
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}",
             message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
-    private String newPassword;
-    private String newPasswordValid;
+    private String password;
+
+    private String passwordValid;
+
+    // 메일 인증 코드
+    private String code;
 }

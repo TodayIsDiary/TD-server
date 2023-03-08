@@ -34,7 +34,10 @@ public class UserServiceImpl implements UserService {
     private final DateServiceImpl dateService;
 
     @Override
-    public void signup(SignupRequest request) {
+    @Transactional
+    public void checkSignup(CheckRequest request){
+        if(!request.getChek()) {throw new CustomException(ErrorCode.ACCOUNT_ID_NOT_CHECK);}
+
         boolean exists = userRepository.existsByEmail(request.getEmail());
         if (exists) throw new CustomException(ErrorCode.EXIST_EMAIL);
 
@@ -43,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
         if (!mail.getCode().equals(request.getCode())) {
             throw new CustomException(ErrorCode.CODE_MISS_MATCHED);
-        }
+        }else mailRepository.delete(mail);
 
         if(dateService.invalidCode(mail.getCreateTime())){
             throw new CustomException(ErrorCode.CODE_EXPIRED);
@@ -52,6 +55,11 @@ public class UserServiceImpl implements UserService {
         if (!request.getPassword().equals(request.getPasswordValid())) {
             throw new CustomException(ErrorCode.PASSWORD_MISS_MATCHED);
         }
+
+    }
+
+    @Override
+    public void signup(SignupRequest request) {
 
         User user = User.builder()
                 .accountId(request.getAccountId())
@@ -64,8 +72,6 @@ public class UserServiceImpl implements UserService {
                 .providerType(ProviderType.LOCAL).build();
 
         userRepository.save(user);
-        mailRepository.delete(mail);
-
     }
 
     @Transactional
@@ -98,24 +104,26 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public void setPasswordCodeCheck(PasswordCheckRequest request){
+        Mail mail = mailRepository.findMailByEmail(request.getEmail())
+                .orElseThrow(() -> new CustomException(ErrorCode.EMAIL_MISS_MATCHED));
+
+        if (!mail.getCode().equals(request.getCode())) {
+            throw new CustomException(ErrorCode.CODE_MISS_MATCHED);
+        }else mailRepository.delete(mail);
+    }
+
     @Transactional
     @Override
     public void setPasswordEmail(PasswordRequest request) {
 
-        Mail mail = mailRepository.findMailByCode(request.getCode())
-                .orElseThrow(() -> new CustomException(ErrorCode.CODE_MISS_MATCHED));
-
-        if(dateService.invalidCode(mail.getCreateTime())){
-            throw new CustomException(ErrorCode.CODE_EXPIRED);
-        }
-
-        User user = userFacade.getUserByEmail(mail.getEmail());
+        User user = userFacade.getUserByEmail(request.getEmail());
 
         if (!request.getNewPassword().equals(request.getNewPasswordValid())) {
             throw new CustomException(ErrorCode.PASSWORD_MISS_MATCHED);
         }
 
-        mailRepository.delete(mail);
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
