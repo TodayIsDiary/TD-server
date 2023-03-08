@@ -24,8 +24,12 @@ public class UserController {
     private final UserService userService;
     private final JwtProvider jwtProvider;
 
+    @Operation(summary = "회원가입 체크")
+    @PostMapping("/signup/check")
+    public void checkSignup(@RequestBody CheckRequest request){ userService.checkSignup(request);}
+
     @Operation(summary = "회원가입")
-    @PostMapping("/signup")
+    @PostMapping("/signup/add")
     @ResponseStatus(HttpStatus.CREATED)
     public void signUp(@Valid @RequestBody SignupRequest request){ userService.signup(request);}
 
@@ -58,6 +62,10 @@ public class UserController {
     public void mail(@Valid @RequestBody MailRequest dto)throws Exception{
         userService.lostPassword(dto);
     }
+
+    @Operation(summary = "비밀번호 찾기 - 이메일 코드입력")
+    @PostMapping("/lost/password/code")
+    public void setEmailPasswordCheck(@RequestBody PasswordCheckRequest request){userService.setPasswordCodeCheck(request);}
 
     @Operation(summary = "이메일-비밀번호 찾기")
     @PatchMapping("/lost/password")
