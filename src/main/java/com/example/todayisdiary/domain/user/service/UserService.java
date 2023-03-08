@@ -5,7 +5,10 @@ import com.example.todayisdiary.global.mail.dto.MailRequest;
 
 public interface UserService {
 
-    // 회원 가입 POST, /user/signup
+    // 회원 가입 체크 POST, /user/signup/check
+    void checkSignup(CheckRequest request);
+
+    // 회원 가입 POST, /user/signup/add
     void signup(SignupRequest request);
 
     // 자체 로그인, POST , /user/login
@@ -15,6 +18,8 @@ public interface UserService {
 
     // 이메일 코드 보낼때, POST , /user/lost/password
     void lostPassword(MailRequest mailDto) throws Exception;
+
+    void setPasswordCodeCheck(PasswordCheckRequest request);
 
     // 코드 인증후 비밀번호 변경, PATCH , /user/lost/password
     void setPasswordEmail(PasswordRequest request);
