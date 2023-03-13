@@ -26,7 +26,7 @@ public class UserController {
 
     @Operation(summary = "회원가입 체크")
     @PostMapping("/signup/check")
-    public void checkSignup(@RequestBody CheckRequest request){ userService.checkSignup(request);}
+    public boolean checkSignup(@RequestBody CheckRequest request){ return userService.checkSignup(request);}
 
     @Operation(summary = "회원가입")
     @PostMapping("/signup/add")

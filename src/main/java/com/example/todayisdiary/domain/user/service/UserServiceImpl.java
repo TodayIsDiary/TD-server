@@ -35,9 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void checkSignup(CheckRequest request){
-        if(!request.getChek()) {throw new CustomException(ErrorCode.ACCOUNT_ID_NOT_CHECK);}
-
+    public boolean checkSignup(CheckRequest request){
         boolean exists = userRepository.existsByEmail(request.getEmail());
         if (exists) throw new CustomException(ErrorCode.EXIST_EMAIL);
 
@@ -52,10 +50,7 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(ErrorCode.CODE_EXPIRED);
         }
 
-        if (!request.getPassword().equals(request.getPasswordValid())) {
-            throw new CustomException(ErrorCode.PASSWORD_MISS_MATCHED);
-        }
-
+        return true;
     }
 
     @Override
