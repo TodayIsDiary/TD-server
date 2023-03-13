@@ -6,7 +6,7 @@ import com.example.todayisdiary.global.mail.dto.MailRequest;
 public interface UserService {
 
     // 회원 가입 체크 POST, /user/signup/check
-    void checkSignup(CheckRequest request);
+    boolean checkSignup(CheckRequest request);
 
     // 회원 가입 POST, /user/signup/add
     void signup(SignupRequest request);
