@@ -28,4 +28,6 @@ public class BoardResponse {
     private final Long userId;
 
     private final String imageUrl;
+
+    private final String writerProfile;
 }
