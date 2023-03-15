@@ -29,11 +29,14 @@ public class Report {
     @JoinColumn(name = "board_id")
     private Board board;
 
+    private String reporter;
+
     @Builder
-    public Report(String title, String content, User user, Board board){
+    public Report(String title, String content, User user, Board board, String reporter){
         this.title = title;
         this.content = content;
         this.user = user;
         this.board = board;
+        this.reporter = reporter;
     }
 }

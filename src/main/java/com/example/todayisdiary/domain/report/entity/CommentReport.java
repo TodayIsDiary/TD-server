@@ -25,15 +25,18 @@ public class CommentReport {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private String reporter;
+
     private String title;
 
     private String content;
 
     @Builder
-    public CommentReport(String title, String content, User user, Comment comment){
+    public CommentReport(String title, String content, User user, Comment comment, String reporter){
         this.title = title;
         this.content = content;
         this.user = user;
         this.comment = comment;
+        this.reporter = reporter;
     }
 }

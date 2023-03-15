@@ -18,6 +18,7 @@ import com.example.todayisdiary.domain.report.repository.UserReportRepository;
 import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
 import com.example.todayisdiary.domain.user.repository.UserRepository;
+import com.example.todayisdiary.global.s3.facade.S3Facade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
+    private final S3Facade s3Facade;
     private final UserFacade userFacade;
     private final BoardFacade boardFacade;
     private final ReportFacade reportFacade;
@@ -49,8 +51,9 @@ public class ReportServiceImpl implements ReportService {
         Report report = new Report(
                 request.getTitle(),
                 request.getContent(),
-                user,
-                board
+                board.getUser(),
+                board,
+                user.getNickName()
         );
         reportRepository.save(report);
     }
@@ -64,8 +67,9 @@ public class ReportServiceImpl implements ReportService {
         CommentReport report = new CommentReport(
                 request.getTitle(),
                 request.getContent(),
-                user,
-                comment
+                comment.getUser(),
+                comment,
+                user.getNickName()
         );
         commentReportRepository.save(report);
     }
@@ -115,7 +119,7 @@ public class ReportServiceImpl implements ReportService {
             ReportList dto = ReportList.builder()
                     .reportId(report.getId())
                     .title(report.getTitle())
-                    .reporter(report.getUser().getNickName()).build();
+                    .reporter(report.getReporter()).build();
             reportLists.add(dto);
         }
         return new ReportListResponse(reportLists);
@@ -132,7 +136,7 @@ public class ReportServiceImpl implements ReportService {
             ReportList dto = ReportList.builder()
                     .reportId(report.getId())
                     .title(report.getTitle())
-                    .reporter(report.getUser().getNickName()).build();
+                    .reporter(report.getReporter()).build();
             reportLists.add(dto);
         }
         return new ReportListResponse(reportLists);
@@ -149,7 +153,7 @@ public class ReportServiceImpl implements ReportService {
             ReportList dto = ReportList.builder()
                     .reportId(report.getId())
                     .title(report.getTitle())
-                    .reporter(report.getUser().getNickName()).build();
+                    .reporter(report.getReporter()).build();
             userReportLists.add(dto);
         }
         return new ReportListResponse(userReportLists);
@@ -165,7 +169,7 @@ public class ReportServiceImpl implements ReportService {
             ReportList dto = ReportList.builder()
                     .reportId(report.getId())
                     .title(report.getTitle())
-                    .reporter(report.getUser().getNickName()).build();
+                    .reporter(report.getReporter()).build();
             reportLists.add(dto);
         }
         return new ReportListResponse(reportLists);
@@ -181,7 +185,7 @@ public class ReportServiceImpl implements ReportService {
             ReportList dto = ReportList.builder()
                     .reportId(report.getId())
                     .title(report.getTitle())
-                    .reporter(report.getUser().getNickName()).build();
+                    .reporter(report.getReporter()).build();
             reportLists.add(dto);
         }
         return new ReportListResponse(reportLists);
@@ -197,7 +201,7 @@ public class ReportServiceImpl implements ReportService {
             ReportList dto = ReportList.builder()
                     .reportId(report.getId())
                     .title(report.getTitle())
-                    .reporter(report.getUser().getNickName()).build();
+                    .reporter(report.getReporter()).build();
             reportLists.add(dto);
         }
         return new ReportListResponse(reportLists);
@@ -216,7 +220,8 @@ public class ReportServiceImpl implements ReportService {
                 .boardTitle(report.getBoard().getTitle())
                 .boardContent(report.getBoard().getContent())
                 .boardId(report.getBoard().getId())
-                .accountId(report.getUser().getAccountId()).build();
+                .imageUrl(boardImageNull(report.getBoard()))
+                .reporter(report.getReporter()).build();
     }
 
     @Override
@@ -231,7 +236,7 @@ public class ReportServiceImpl implements ReportService {
                 .content(report.getContent())
                 .comment(report.getComment().getComments())
                 .commentId(report.getComment().getId())
-                .accountId(report.getUser().getAccountId()).build();
+                .reporter(report.getReporter()).build();
     }
 
     @Override
@@ -241,11 +246,13 @@ public class ReportServiceImpl implements ReportService {
 
         return UserReportResponse.builder()
                 .reportId(report.getId())
-                .reporter(report.getUser().getNickName())
+                .reporter(report.getReporter())
                 .title(report.getTitle())
                 .content(report.getContent())
                 .userId(report.getUser().getId())
-                .accountId(report.getUser().getAccountId())
+                .imageUrl(s3Facade.getUrl(report.getUser().getImageUrl()))
+                .email(report.getUser().getEmail())
+                .sex(report.getUser().getSex())
                 .introduce(report.getUser().getIntroduction())
                 .nickName(report.getUser().getNickName()).build();
 
@@ -270,6 +277,12 @@ public class ReportServiceImpl implements ReportService {
     public void forceDelUser(Long id){
         User user = userFacade.getUserById(id);
         userRepository.delete(user);
+    }
+
+    public String boardImageNull(Board board){
+        if(board.getImageUrl() == null){
+            return null;
+        }else return s3Facade.getUrl(board.getImageUrl());
     }
 
 }

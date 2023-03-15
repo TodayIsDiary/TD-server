@@ -13,6 +13,7 @@ public class BoardList {
     private final String date; // 몇분전 글인지 볼 수 있게 해준다. 예 : 방금전, 5분전
     private final int heart;
     private final int view;
+    private final String writerProfile;
     private final int commentCount;
     private final String imageUrl;
 

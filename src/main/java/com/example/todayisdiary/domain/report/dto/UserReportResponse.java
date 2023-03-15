@@ -1,5 +1,6 @@
 package com.example.todayisdiary.domain.report.dto;
 
+import com.example.todayisdiary.domain.user.enums.Sex;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,6 +13,8 @@ public class UserReportResponse {
     private String content;
     private String introduce;
     private Long userId;
-    private String accountId;
     private String nickName;
+    private String imageUrl;
+    private String email;
+    private Sex sex;
 }

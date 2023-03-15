@@ -13,5 +13,5 @@ public class ReportResponse {
     private String boardTitle;
     private String boardContent;
     private Long boardId;
-    private String accountId;
+    private String imageUrl;
 }

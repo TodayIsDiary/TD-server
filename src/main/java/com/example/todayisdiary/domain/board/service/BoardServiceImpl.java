@@ -85,7 +85,8 @@ public class BoardServiceImpl implements BoardService {
                     .date(dateService.betweenDate(board.getBoardTime()))
                     .view(board.getView())
                     .commentCount(board.getComments().size())
-                    .imageUrl(s3Facade.getUrl(board.getImageUrl()))
+                    .imageUrl(boardImageNull(board))
+                    .writerProfile(s3Facade.getUrl(board.getUser().getImageUrl()))
                     .build();
             boardLists.add(dto);
         }
@@ -108,7 +109,8 @@ public class BoardServiceImpl implements BoardService {
                         .date(dateService.betweenDate(board.getBoardTime()))
                         .view(board.getView())
                         .commentCount(board.getComments().size())
-                        .imageUrl(s3Facade.getUrl(board.getImageUrl()))
+                        .imageUrl(boardImageNull(board))
+                        .writerProfile(s3Facade.getUrl(board.getUser().getImageUrl()))
                         .build();
                 boardLists.add(dto);
             }
@@ -131,7 +133,8 @@ public class BoardServiceImpl implements BoardService {
                     .date(dateService.betweenDate(board.getBoardTime()))
                     .view(board.getView())
                     .commentCount(board.getComments().size())
-                    .imageUrl(s3Facade.getUrl(board.getImageUrl()))
+                    .imageUrl(boardImageNull(board))
+                    .writerProfile(s3Facade.getUrl(board.getUser().getImageUrl()))
                     .build();
             boardLists.add(dto);
         }
@@ -170,7 +173,8 @@ public class BoardServiceImpl implements BoardService {
                 .isLiked(writerLike(board))
                 .commentCount(board.getComments().size())
                 .heart(board.getHeart())
-                .imageUrl(s3Facade.getUrl(board.getImageUrl()))
+                .imageUrl(boardImageNull(board))
+                .writerProfile(s3Facade.getUrl(board.getUser().getImageUrl()))
                 .userId(board.getUser().getId()).build();
     }
 
@@ -203,11 +207,18 @@ public class BoardServiceImpl implements BoardService {
                     .date(dateService.betweenDate(board.getBoardTime()))
                     .view(board.getView())
                     .commentCount(board.getComments().size())
-                    .imageUrl(s3Facade.getUrl(board.getImageUrl()))
+                    .imageUrl(boardImageNull(board))
+                    .writerProfile(s3Facade.getUrl(board.getUser().getImageUrl()))
                     .build();
             boardLists.add(dto);
         }
         return new BoardResponseList(boardLists);
+    }
+
+    public String boardImageNull(Board board){
+        if(board.getImageUrl() == null){
+            return null;
+        }else return s3Facade.getUrl(board.getImageUrl());
     }
 
 }
