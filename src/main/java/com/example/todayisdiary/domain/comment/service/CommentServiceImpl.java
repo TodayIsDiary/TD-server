@@ -29,6 +29,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
+    private final S3Facade s3Facade;
     private final CommentFacade commentFacade;
     private final UserFacade userFacade;
     private final BoardFacade boardFacade;
@@ -48,7 +49,7 @@ public class CommentServiceImpl implements CommentService {
                 .board(board)
                 .originChatId(0L)
                 .replyChatId(0L)
-                .imageUrl(user.getImageUrl()).build();
+                .imageUrl(s3Facade.getUrl(user.getImageUrl())).build();
         comment.isOrigin();
         commentRepository.save(comment);
     }
@@ -67,7 +68,7 @@ public class CommentServiceImpl implements CommentService {
                     .board(comment.getBoard())
                     .originChatId(comment.getId())
                     .replyChatId(comment.getId())
-                    .imageUrl(user.getImageUrl()).build();
+                    .imageUrl(s3Facade.getUrl(user.getImageUrl())).build();
             commentRepository.save(comments);
         } else {
             Comment comments = Comment.builder()
@@ -77,7 +78,7 @@ public class CommentServiceImpl implements CommentService {
                     .board(comment.getBoard())
                     .originChatId(comment.getOriginChatId())
                     .replyChatId(comment.getId())
-                    .imageUrl(user.getImageUrl()).build();
+                    .imageUrl(s3Facade.getUrl(user.getImageUrl())).build();
             commentRepository.save(comments);
         }
     }
@@ -125,7 +126,7 @@ public class CommentServiceImpl implements CommentService {
                             .originChatId(comment.getOriginChatId())
                             .replyChatId(comment.getReplyChatId())
                             .userId(comment.getUser().getId())
-                            .imageUrl(comment.getImageUrl()).build();
+                            .imageUrl(s3Facade.getUrl(comment.getImageUrl())).build();
                     commentLists.add(dto);
             }
         }
@@ -152,7 +153,7 @@ public class CommentServiceImpl implements CommentService {
                         .isLiked(writerLike(c))
                         .replyChatId(c.getReplyChatId())
                         .userId(c.getUser().getId())
-                        .imageUrl(c.getImageUrl()).build();
+                        .imageUrl(s3Facade.getUrl(c.getImageUrl())).build();
                 commentLists.add(dto);
             }
         }
@@ -179,7 +180,7 @@ public class CommentServiceImpl implements CommentService {
                         .isLiked(writerLike(c))
                         .replyChatId(c.getReplyChatId())
                         .userId(c.getUser().getId())
-                        .imageUrl(c.getImageUrl()).build();
+                        .imageUrl(s3Facade.getUrl(c.getImageUrl())).build();
                 commentLists.add(dto);
             }
         }
