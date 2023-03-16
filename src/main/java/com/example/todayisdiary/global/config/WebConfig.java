@@ -13,6 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addMapping("/**")
                 .allowedHeaders("*")
                 .allowedMethods("*")
+                .exposedHeaders("*")
                 .allowedOriginPatterns("*");
     }
 }
