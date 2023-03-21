@@ -35,7 +35,7 @@ public class UserControllerTest {
     @Rollback(value = true)
     void checkSignup() {
         User user = User.builder()
-                .email("ntaekeulgom@gmail.com")
+                .email("todayisdiary@gmail.com")
                 .accountId("beargamess")
                 .password(passwordEncoder.encode("abcdegh8291!"))
                 .nickName("홍길동")
