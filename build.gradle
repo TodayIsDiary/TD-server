@@ -19,6 +19,9 @@ repositories {
 }
 
 dependencies {
+    // webClient
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
     // developmentOnly
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
