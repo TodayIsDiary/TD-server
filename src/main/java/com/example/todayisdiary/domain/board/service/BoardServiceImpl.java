@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -75,34 +76,9 @@ public class BoardServiceImpl implements BoardService {
     public BoardResponseList boardLists() {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         List<Board> boards = boardFacade.getBoardAllById(sort);
-        List<BoardList> boardLists = new ArrayList<>();
 
-        for (Board board : boards) {
-            BoardList dto = BoardList.builder()
-                    .boardId(board.getId())
-                    .title(board.getTitle())
-                    .category(board.getCategory())
-                    .date(dateService.betweenDate(board.getBoardTime()))
-                    .view(board.getView())
-                    .commentCount(board.getComments().size())
-                    .imageUrl(boardImageNull(board))
-                    .writerProfile(s3Facade.getUrl(board.getUser().getImageUrl()))
-                    .build();
-            boardLists.add(dto);
-        }
-        return new BoardResponseList(boardLists);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public BoardResponseList boardCategoryList(BoardCategory category) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        List<Board> boards = boardFacade.getBoardAllById(sort);
-        List<BoardList> boardLists = new ArrayList<>();
-
-        for (Board board : boards) {
-            if (board.getCategory().equals(category)) {
-                BoardList dto = BoardList.builder()
+        List<BoardList> boardLists = boards.stream()
+                .map(board -> BoardList.builder()
                         .boardId(board.getId())
                         .title(board.getTitle())
                         .category(board.getCategory())
@@ -111,10 +87,31 @@ public class BoardServiceImpl implements BoardService {
                         .commentCount(board.getComments().size())
                         .imageUrl(boardImageNull(board))
                         .writerProfile(s3Facade.getUrl(board.getUser().getImageUrl()))
-                        .build();
-                boardLists.add(dto);
-            }
-        }
+                        .build())
+                .collect(Collectors.toList());
+
+        return new BoardResponseList(boardLists);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public BoardResponseList boardCategoryList(BoardCategory category) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        List<Board> boards = boardFacade.getBoardAllById(sort);
+
+        List<BoardList> boardLists = boards.stream()
+                .map(board -> BoardList.builder()
+                        .boardId(board.getId())
+                        .title(board.getTitle())
+                        .category(board.getCategory())
+                        .date(dateService.betweenDate(board.getBoardTime()))
+                        .view(board.getView())
+                        .commentCount(board.getComments().size())
+                        .imageUrl(boardImageNull(board))
+                        .writerProfile(s3Facade.getUrl(board.getUser().getImageUrl()))
+                        .build())
+                .collect(Collectors.toList());
+
         return new BoardResponseList(boardLists);
     }
 
@@ -123,21 +120,20 @@ public class BoardServiceImpl implements BoardService {
     public BoardResponseList boardHeartList() {
         Sort sort = Sort.by(Sort.Direction.DESC, "heart");
         List<Board> boards = boardFacade.getBoardAllById(sort);
-        List<BoardList> boardLists = new ArrayList<>();
 
-        for (Board board : boards) {
-            BoardList dto = BoardList.builder()
-                    .boardId(board.getId())
-                    .title(board.getTitle())
-                    .category(board.getCategory())
-                    .date(dateService.betweenDate(board.getBoardTime()))
-                    .view(board.getView())
-                    .commentCount(board.getComments().size())
-                    .imageUrl(boardImageNull(board))
-                    .writerProfile(s3Facade.getUrl(board.getUser().getImageUrl()))
-                    .build();
-            boardLists.add(dto);
-        }
+        List<BoardList> boardLists = boards.stream()
+                .map(board -> BoardList.builder()
+                        .boardId(board.getId())
+                        .title(board.getTitle())
+                        .category(board.getCategory())
+                        .date(dateService.betweenDate(board.getBoardTime()))
+                        .view(board.getView())
+                        .commentCount(board.getComments().size())
+                        .imageUrl(boardImageNull(board))
+                        .writerProfile(s3Facade.getUrl(board.getUser().getImageUrl()))
+                        .build())
+                .collect(Collectors.toList());
+
         return new BoardResponseList(boardLists);
     }
 
@@ -197,21 +193,20 @@ public class BoardServiceImpl implements BoardService {
 
     private BoardResponseList boardUserList(User user){
         List<Board> boards = user.getBoards();
-        List<BoardList> boardLists = new ArrayList<>();
 
-        for (Board board : boards) {
-            BoardList dto = BoardList.builder()
-                    .boardId(board.getId())
-                    .title(board.getTitle())
-                    .category(board.getCategory())
-                    .date(dateService.betweenDate(board.getBoardTime()))
-                    .view(board.getView())
-                    .commentCount(board.getComments().size())
-                    .imageUrl(boardImageNull(board))
-                    .writerProfile(s3Facade.getUrl(board.getUser().getImageUrl()))
-                    .build();
-            boardLists.add(dto);
-        }
+        List<BoardList> boardLists = boards.stream()
+                .map(board -> BoardList.builder()
+                        .boardId(board.getId())
+                        .title(board.getTitle())
+                        .category(board.getCategory())
+                        .date(dateService.betweenDate(board.getBoardTime()))
+                        .view(board.getView())
+                        .commentCount(board.getComments().size())
+                        .imageUrl(boardImageNull(board))
+                        .writerProfile(s3Facade.getUrl(board.getUser().getImageUrl()))
+                        .build())
+                .collect(Collectors.toList());
+
         return new BoardResponseList(boardLists);
     }
 
