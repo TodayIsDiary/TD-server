@@ -9,7 +9,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
+
+import javax.transaction.Transactional;
+
+import java.util.Objects;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -20,16 +26,22 @@ public class UserControllerTest {
     @Autowired
     UserFacade userFacade;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Test
-    @DisplayName("회원가입 전 체크")
+    @Transactional
+    @DisplayName("회원가입 체크")
     @Rollback(value = true)
     void checkSignup() {
         User user = User.builder()
                 .email("ntaekeulgom@gmail.com")
                 .accountId("beargamess")
-                .password("hoyoung8291!")
-                .nickName("곰겜")
+                .password(passwordEncoder.encode("abcdegh8291!"))
+                .nickName("홍길동")
                 .providerType(ProviderType.LOCAL)
+                .imageUrl(defaultImage(null))
+                .introduction("안녕하세요.")
                 .sex(Sex.MALE)
                 .build();
 
@@ -85,5 +97,10 @@ public class UserControllerTest {
 
     @Test
     void signupEmail() {
+    }
+
+    private String defaultImage(String imageUrl){
+        if(Objects.equals(imageUrl, "null")){return "4f743a16-e96f-49e7-9c11-0948592dab18-5087579.png";}
+        else return imageUrl == null ? "4f743a16-e96f-49e7-9c11-0948592dab18-5087579.png" : imageUrl;
     }
 }
