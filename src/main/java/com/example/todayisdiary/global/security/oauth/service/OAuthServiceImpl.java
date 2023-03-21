@@ -5,6 +5,8 @@ import com.example.todayisdiary.domain.user.entity.User;
 import com.example.todayisdiary.domain.user.enums.Role;
 import com.example.todayisdiary.domain.user.facade.UserFacade;
 import com.example.todayisdiary.domain.user.repository.UserRepository;
+import com.example.todayisdiary.global.error.ErrorCode;
+import com.example.todayisdiary.global.error.exception.CustomException;
 import com.example.todayisdiary.global.security.jwt.JwtProvider;
 import com.example.todayisdiary.global.security.oauth.dto.*;
 import com.example.todayisdiary.global.security.oauth.entity.GoogleOauth;
@@ -17,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -53,20 +57,18 @@ public class OAuthServiceImpl implements OAuthService{
 
     @Override
     public GoogleUserInfoDto getGoogleUserInfoDto(String code) throws JsonProcessingException {
-        ResponseEntity<String> accessTokenResponse = googleOAuth.requestAccessToken(code);
+        Mono<ResponseEntity<String>> accessTokenResponse = googleOAuth.requestAccessToken(code);
         GoogleOAuthTokenDto oAuthToken = googleOAuth.getAccessToken(accessTokenResponse);
-        ResponseEntity<String> userInfoResponse = googleOAuth.requestUserInfo(oAuthToken);
-        GoogleUserInfoDto googleUser = googleOAuth.getUserInfo(userInfoResponse);
-        return googleUser;
+        Flux<String> userInfoResponse = googleOAuth.requestUserInfo(oAuthToken);
+        return googleOAuth.getUserInfo(userInfoResponse);
     }
 
     @Override
     public KakaoUserInfoDto getKakaoUserInfoDto(String code) throws JsonProcessingException {
-        ResponseEntity<String> accessTokenResponse = kakaoOAuth.requestAccessToken(code);
+        Mono<ResponseEntity<String>> accessTokenResponse = kakaoOAuth.requestAccessToken(code);
         KakaoOAuthTokenDto oAuthToken = kakaoOAuth.getAccessToken(accessTokenResponse);
-        ResponseEntity<String> userInfoResponse = kakaoOAuth.requestUserInfo(oAuthToken);
-        KakaoUserInfoDto kakaoUser = kakaoOAuth.getUserInfo(userInfoResponse);
-        return kakaoUser;
+        Flux<String> userInfoResponse = kakaoOAuth.requestUserInfo(oAuthToken);
+        return kakaoOAuth.getUserInfo(userInfoResponse);
     }
 
     @Override
@@ -88,7 +90,7 @@ public class OAuthServiceImpl implements OAuthService{
         // 이메일이 존재할시 로그인
         User user = userFacade.getUserByEmail(email);
         if(user.getProviderType().equals(ProviderType.LOCAL)){
-          throw new IllegalArgumentException("이미 가입된 계정입니다.");
+          throw new CustomException(ErrorCode.EXIST_USER);
         }else return Login(email, name);
     }
 
@@ -112,7 +114,7 @@ public class OAuthServiceImpl implements OAuthService{
         // 이메일이 존재할시 로그인
         User user = userFacade.getUserByEmail(email);
         if(user.getProviderType().equals(ProviderType.LOCAL)){
-            throw new IllegalArgumentException("이미 가입된 계정입니다.");
+            throw new CustomException(ErrorCode.EXIST_USER);
         }else return Login(email, name);
     }
 
