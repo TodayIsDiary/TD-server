@@ -50,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
                 .board(board)
                 .originChatId(0L)
                 .replyChatId(0L)
-                .imageUrl(s3Facade.getUrl(user.getImageUrl())).build();
+                .imageUrl(user.getImageUrl()).build();
         comment.isOrigin();
         commentRepository.save(comment);
     }
@@ -69,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
                     .board(comment.getBoard())
                     .originChatId(comment.getId())
                     .replyChatId(comment.getId())
-                    .imageUrl(s3Facade.getUrl(user.getImageUrl())).build();
+                    .imageUrl(user.getImageUrl()).build();
             commentRepository.save(comments);
         } else {
             Comment comments = Comment.builder()
@@ -79,7 +79,7 @@ public class CommentServiceImpl implements CommentService {
                     .board(comment.getBoard())
                     .originChatId(comment.getOriginChatId())
                     .replyChatId(comment.getId())
-                    .imageUrl(s3Facade.getUrl(user.getImageUrl())).build();
+                    .imageUrl(user.getImageUrl()).build();
             commentRepository.save(comments);
         }
     }
