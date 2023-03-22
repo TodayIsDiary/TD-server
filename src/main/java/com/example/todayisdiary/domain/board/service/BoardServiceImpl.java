@@ -100,6 +100,7 @@ public class BoardServiceImpl implements BoardService {
         List<Board> boards = boardFacade.getBoardAllById(sort);
 
         List<BoardList> boardLists = boards.stream()
+                .filter(board -> board.getCategory().equals(category))
                 .map(board -> BoardList.builder()
                         .boardId(board.getId())
                         .title(board.getTitle())
