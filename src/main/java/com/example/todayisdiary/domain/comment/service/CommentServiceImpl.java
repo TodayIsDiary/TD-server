@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -49,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
                 .board(board)
                 .originChatId(0L)
                 .replyChatId(0L)
-                .imageUrl(s3Facade.getUrl(user.getImageUrl())).build();
+                .imageUrl(user.getImageUrl()).build();
         comment.isOrigin();
         commentRepository.save(comment);
     }
@@ -68,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
                     .board(comment.getBoard())
                     .originChatId(comment.getId())
                     .replyChatId(comment.getId())
-                    .imageUrl(s3Facade.getUrl(user.getImageUrl())).build();
+                    .imageUrl(user.getImageUrl()).build();
             commentRepository.save(comments);
         } else {
             Comment comments = Comment.builder()
@@ -78,7 +79,7 @@ public class CommentServiceImpl implements CommentService {
                     .board(comment.getBoard())
                     .originChatId(comment.getOriginChatId())
                     .replyChatId(comment.getId())
-                    .imageUrl(s3Facade.getUrl(user.getImageUrl())).build();
+                    .imageUrl(user.getImageUrl()).build();
             commentRepository.save(comments);
         }
     }
@@ -105,33 +106,30 @@ public class CommentServiceImpl implements CommentService {
             commentRepository.deleteAll(comments);
         } else commentRepository.delete(comment);
     }
-
     @Override
     @Transactional(readOnly = true)
-    public CommentResponseList chatList(Long id) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        Board board = boardFacade.getBoardById(id);
-        List<Comment> comments = commentFacade.getChatAllById(sort);
-        List<CommentList> commentLists = new ArrayList<>();
+        public CommentResponseList chatList(Long id) {
+            Sort sort = Sort.by(Sort.Direction.DESC, "id");
+            Board board = boardFacade.getBoardById(id);
+            List<Comment> comments = commentFacade.getChatAllById(sort);
 
-        for (Comment comment : comments) {
-            if (board.getId().equals(comment.getBoard().getId()) && comment.isOriginChat()) {
-                    CommentList dto = CommentList.builder()
-                            .id(comment.getId())
-                            .comment(comment.getComments())
-                            .writer(comment.getWriter())
-                            .date(dateService.betweenDate(comment.getChatTime()))
-                            .heart(comment.getHeart())
-                            .isLiked(writerLike(comment))
-                            .originChatId(comment.getOriginChatId())
-                            .replyChatId(comment.getReplyChatId())
-                            .userId(comment.getUser().getId())
-                            .imageUrl(s3Facade.getUrl(comment.getImageUrl())).build();
-                    commentLists.add(dto);
-            }
+            List<CommentList> commentLists = comments.stream()
+                .filter(comment -> board.getId().equals(comment.getBoard().getId()) && comment.isOriginChat())
+                .map(comment -> CommentList.builder()
+                        .id(comment.getId())
+                        .comment(comment.getComments())
+                        .writer(comment.getWriter())
+                        .date(dateService.betweenDate(comment.getChatTime()))
+                        .heart(comment.getHeart())
+                        .isLiked(writerLike(comment))
+                        .originChatId(comment.getOriginChatId())
+                        .replyChatId(comment.getReplyChatId())
+                        .userId(comment.getUser().getId())
+                        .imageUrl(s3Facade.getUrl(comment.getImageUrl())).build())
+                .collect(Collectors.toList());
+
+            return new CommentResponseList(commentLists);
         }
-        return new CommentResponseList(commentLists);
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -139,11 +137,10 @@ public class CommentServiceImpl implements CommentService {
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
         Comment comment = commentFacade.getChatById(id);
         List<Comment> comments = commentFacade.getChatAllById(sort);
-        List<CommentList> commentLists = new ArrayList<>();
 
-        for (Comment c : comments) {
-            if (comment.getId().equals(c.getOriginChatId())) {
-                CommentList dto = CommentList.builder()
+        List<CommentList> commentLists = comments.stream()
+                .filter(c -> comment.getId().equals(c.getOriginChatId()))
+                .map(c -> CommentList.builder()
                         .id(c.getId())
                         .comment(c.getComments())
                         .writer(c.getWriter())
@@ -153,10 +150,9 @@ public class CommentServiceImpl implements CommentService {
                         .isLiked(writerLike(c))
                         .replyChatId(c.getReplyChatId())
                         .userId(c.getUser().getId())
-                        .imageUrl(s3Facade.getUrl(c.getImageUrl())).build();
-                commentLists.add(dto);
-            }
-        }
+                        .imageUrl(s3Facade.getUrl(c.getImageUrl())).build())
+                .collect(Collectors.toList());
+
         return new CommentResponseList(commentLists);
     }
 
@@ -166,11 +162,10 @@ public class CommentServiceImpl implements CommentService {
         Sort sort = Sort.by(Sort.Direction.DESC, "heart");
         Board board = boardFacade.getBoardById(id);
         List<Comment> comments = commentFacade.getChatAllById(sort);
-        List<CommentList> commentLists = new ArrayList<>();
 
-        for (Comment c : comments) {
-            if (board.getId().equals(c.getBoard().getId()) && c.isOriginChat()) {
-                CommentList dto = CommentList.builder()
+        List<CommentList> commentLists = comments.stream()
+                .filter(c -> board.getId().equals(c.getBoard().getId()) && c.isOriginChat())
+                .map(c -> CommentList.builder()
                         .id(c.getId())
                         .comment(c.getComments())
                         .writer(c.getWriter())
@@ -180,10 +175,9 @@ public class CommentServiceImpl implements CommentService {
                         .isLiked(writerLike(c))
                         .replyChatId(c.getReplyChatId())
                         .userId(c.getUser().getId())
-                        .imageUrl(s3Facade.getUrl(c.getImageUrl())).build();
-                commentLists.add(dto);
-            }
-        }
+                        .imageUrl(s3Facade.getUrl(c.getImageUrl())).build())
+                .collect(Collectors.toList());
+
         return new CommentResponseList(commentLists);
     }
 

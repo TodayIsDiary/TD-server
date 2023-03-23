@@ -11,6 +11,10 @@ import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Configuration
 @RequiredArgsConstructor
@@ -30,8 +34,9 @@ public class KakaoOauth {
         return kakaoLoginUrl;
     }
 
-    public ResponseEntity<String> requestAccessToken(String code) {
-        RestTemplate restTemplate = new RestTemplate();
+    public Mono<ResponseEntity<String>> requestAccessToken(String code) {
+        WebClient webClient = WebClient.builder().build();
+
         HttpHeaders headersAccess = new HttpHeaders();
         headersAccess.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -40,36 +45,38 @@ public class KakaoOauth {
         params.add("redirect_uri", kakaoRedirectUrl);
         params.add("code", code);
 
-        HttpEntity<MultiValueMap<String, String>> kakaoRequest = new HttpEntity<>(params, headersAccess);
-
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(kakao_token_request_url,
-                kakaoRequest, String.class);
-
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            return responseEntity;
-        }
-        return null;
+        return webClient.post()
+                .uri(kakao_token_request_url)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData(params))
+                .retrieve()
+                .toEntity(String.class)
+                .flatMap(responseEntity -> {
+                    if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                        return Mono.just(responseEntity);
+                    }
+                    return Mono.empty();
+                });
     }
 
-    public KakaoOAuthTokenDto getAccessToken(ResponseEntity<String> response) throws JsonProcessingException {
+    public KakaoOAuthTokenDto getAccessToken(Mono<ResponseEntity<String>> response) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        KakaoOAuthTokenDto kakaoOAuthTokenDto = objectMapper.readValue(response.getBody(), KakaoOAuthTokenDto.class);
+        KakaoOAuthTokenDto kakaoOAuthTokenDto = objectMapper.readValue(response.toString(), KakaoOAuthTokenDto.class);
         return kakaoOAuthTokenDto;
     }
 
-    public ResponseEntity<String> requestUserInfo(KakaoOAuthTokenDto oAuthToken) {
-        HttpHeaders headers = new HttpHeaders();
-        RestTemplate restTemplate = new RestTemplate();
-        headers.add("Authorization", "Bearer " + oAuthToken.getAccess_token());
+    public Flux<String> requestUserInfo(KakaoOAuthTokenDto oAuthToken) {
+        WebClient webClient = WebClient.builder().build();
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
-        ResponseEntity<String> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, request, String.class);
-        return response;
+        return webClient.get()
+                .uri("https://kapi.kakao.com/v2/user/me")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer" + oAuthToken.getAccess_token())
+                .retrieve()
+                .bodyToFlux(String.class);
     }
 
-    public KakaoUserInfoDto getUserInfo(ResponseEntity<String> response) throws JsonProcessingException {
+    public KakaoUserInfoDto getUserInfo(Flux<String> response) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        KakaoUserInfoDto kakaoUserInfoDto = objectMapper.readValue(response.getBody(), KakaoUserInfoDto.class);
-        return kakaoUserInfoDto;
+        return objectMapper.readValue(response.toString(), KakaoUserInfoDto.class);
     }
 }
